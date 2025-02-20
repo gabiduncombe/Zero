@@ -14,42 +14,126 @@ class MathGame {
     }
 
     generatePuzzle() {
-        const puzzleSets = [
-            [2, 4, 8, 16], [3, 6, 9, 18], [4, 8, 12, 16], [2, 6, 12, 18], [4, 8, 16, 20],
-            [2, 4, 6, 12], [3, 9, 12, 18], [4, 12, 16, 20], [2, 8, 16, 20], [6, 12, 15, 18],
-            [4, 8, 12, 20], [2, 10, 15, 20], [5, 10, 15, 20], [4, 12, 15, 18], [2, 6, 12, 15],
-            [8, 12, 16, 20], [4, 8, 15, 20], [2, 8, 12, 16], [6, 9, 12, 18], [4, 12, 16, 18],
-            [2, 4, 12, 16], [3, 6, 9, 15], [4, 8, 12, 15], [2, 6, 12, 20], [4, 8, 12, 18],
-            [2, 4, 10, 20], [3, 6, 15, 18], [4, 8, 16, 18], [2, 6, 18, 20], [4, 12, 15, 20],
-            [1, 2, 4, 8], [1, 3, 6, 12], [1, 4, 8, 16], [1, 5, 10, 20], [2, 3, 6, 9],
-            [2, 5, 10, 15], [3, 4, 8, 12], [3, 5, 10, 15], [4, 5, 10, 20], [5, 6, 12, 18],
-            [1, 2, 6, 12], [1, 3, 9, 18], [1, 4, 12, 16], [1, 6, 12, 18], [2, 3, 12, 18],
-            [2, 6, 8, 16], [3, 4, 12, 16], [3, 6, 8, 12], [4, 6, 8, 16], [5, 8, 12, 16],
-            [1, 2, 8, 16], [1, 3, 12, 15], [1, 4, 16, 20], [1, 8, 12, 16], [2, 3, 15, 18],
-            [2, 8, 10, 20], [3, 4, 15, 18], [3, 8, 9, 12], [4, 8, 10, 12], [5, 10, 12, 15],
-            [1, 2, 10, 20], [1, 3, 15, 18], [1, 5, 15, 20], [1, 10, 12, 15], [2, 4, 15, 18],
-            [2, 10, 12, 16], [3, 5, 12, 15], [3, 10, 12, 15], [4, 10, 12, 16], [6, 10, 12, 18],
-            [1, 4, 6, 8], [2, 3, 8, 12], [2, 4, 9, 18], [2, 6, 9, 12], [3, 4, 6, 12],
-            [3, 6, 10, 15], [4, 6, 9, 12], [4, 8, 9, 12], [5, 6, 8, 15], [6, 8, 10, 12],
-            [1, 5, 6, 12], [2, 3, 10, 15], [2, 5, 6, 15], [2, 8, 9, 18], [3, 4, 10, 20],
-            [3, 8, 10, 15], [4, 6, 10, 20], [4, 10, 15, 20], [5, 6, 10, 20], [6, 10, 15, 20],
-            [1, 6, 8, 12], [2, 4, 5, 10], [2, 6, 10, 12], [3, 4, 5, 12], [3, 6, 16, 18],
-            [4, 5, 6, 15], [4, 6, 15, 18], [5, 6, 16, 20], [6, 8, 15, 18], [8, 10, 15, 20],
-            [1, 8, 10, 12], [2, 5, 8, 10], [2, 8, 15, 18], [3, 5, 8, 16], [3, 8, 15, 18],
-            [4, 5, 8, 20], [4, 8, 18, 20], [5, 8, 18, 20], [8, 12, 15, 18], [10, 12, 15, 18],
-            [1, 2, 3, 6], [1, 2, 5, 10], [1, 3, 4, 12], [1, 4, 5, 20], [2, 3, 4, 12],
-            [2, 5, 6, 12], [3, 4, 5, 15], [3, 5, 6, 18], [4, 5, 6, 12], [5, 6, 8, 12],
-            [1, 2, 9, 18], [1, 3, 8, 16], [1, 4, 10, 15], [1, 5, 8, 20], [2, 3, 16, 18],
-            [2, 5, 16, 20], [3, 4, 16, 20], [3, 5, 16, 20], [4, 5, 16, 20], [5, 6, 16, 18],
-            [1, 2, 15, 18], [1, 3, 10, 20], [1, 4, 15, 18], [1, 5, 12, 18], [2, 3, 5, 15],
-            [2, 5, 12, 18], [3, 4, 8, 15], [3, 5, 12, 18], [4, 5, 12, 18], [5, 6, 12, 15],
-            [1, 6, 10, 15], [2, 6, 15, 18], [2, 9, 12, 15], [3, 6, 12, 15], [3, 9, 15, 18],
-            [4, 6, 12, 15], [4, 9, 12, 15], [5, 9, 12, 15], [6, 9, 15, 18], [9, 12, 15, 18],
-            [1, 8, 15, 18], [2, 8, 12, 15], [2, 10, 12, 15], [3, 8, 12, 15], [3, 10, 15, 18],
-            [4, 8, 15, 18], [4, 10, 12, 15], [5, 8, 12, 15], [6, 8, 12, 15], [8, 10, 12, 15]
-        ];
-        
-        return puzzleSets[Math.floor(Math.random() * puzzleSets.length)];
+        // Work backwards from 0 to create a guaranteed solvable puzzle
+        const generateBackwards = () => {
+            let numbers = [0];  // Start with target number
+            const usedNumbers = new Set();  // Track used numbers to prevent duplicates
+            
+            // Generate 3 operations in reverse
+            for (let i = 0; i < 3; i++) {
+                const lastNum = numbers[numbers.length - 1];
+                
+                // Pick random operation and numbers that would result in lastNum
+                const ops = [
+                    // Addition: a + b = lastNum
+                    () => {
+                        let attempts = 0;
+                        while (attempts < 20) {
+                            const a = Math.floor(Math.random() * 20) + 1;  // 1-20
+                            const b = lastNum - a;
+                            if (b >= 1 && b <= 20 && !usedNumbers.has(a) && !usedNumbers.has(b)) {
+                                usedNumbers.add(a);
+                                usedNumbers.add(b);
+                                return [a, b];
+                            }
+                            attempts++;
+                        }
+                        return null;
+                    },
+                    // Subtraction: a - b = lastNum
+                    () => {
+                        let attempts = 0;
+                        while (attempts < 20) {
+                            const b = Math.floor(Math.random() * 20) + 1;  // 1-20
+                            const a = lastNum + b;
+                            if (a >= 1 && a <= 20 && !usedNumbers.has(a) && !usedNumbers.has(b)) {
+                                usedNumbers.add(a);
+                                usedNumbers.add(b);
+                                return [a, b];
+                            }
+                            attempts++;
+                        }
+                        return null;
+                    },
+                    // Multiplication: a * b = lastNum
+                    () => {
+                        if (lastNum === 0) {
+                            let attempts = 0;
+                            while (attempts < 20) {
+                                const a = Math.floor(Math.random() * 19) + 2;  // 2-20
+                                const b = Math.floor(Math.random() * 19) + 2;  // 2-20
+                                if (!usedNumbers.has(a) && !usedNumbers.has(b)) {
+                                    usedNumbers.add(a);
+                                    usedNumbers.add(b);
+                                    return [a, b];
+                                }
+                                attempts++;
+                            }
+                            return null;
+                        }
+                        
+                        const factors = [];
+                        for (let n = 1; n <= Math.min(20, lastNum); n++) {
+                            if (lastNum % n === 0) {
+                                const other = lastNum / n;
+                                if (other >= 1 && other <= 20 && !usedNumbers.has(n) && !usedNumbers.has(other)) {
+                                    factors.push([n, other]);
+                                }
+                            }
+                        }
+                        if (factors.length === 0) return null;
+                        const pair = factors[Math.floor(Math.random() * factors.length)];
+                        usedNumbers.add(pair[0]);
+                        usedNumbers.add(pair[1]);
+                        return pair;
+                    },
+                    // Division: a ÷ b = lastNum
+                    () => {
+                        let attempts = 0;
+                        while (attempts < 20) {
+                            const b = Math.floor(Math.random() * 20) + 1;  // 1-20
+                            const a = lastNum * b;
+                            if (a >= 1 && a <= 20 && !usedNumbers.has(a) && !usedNumbers.has(b)) {
+                                usedNumbers.add(a);
+                                usedNumbers.add(b);
+                                return [a, b];
+                            }
+                            attempts++;
+                        }
+                        return null;
+                    }
+                ];
+
+                // Try operations in random order until we get valid numbers
+                const shuffledOps = ops.sort(() => Math.random() - 0.5);
+                let validNumbers = null;
+                
+                for (const operation of shuffledOps) {
+                    validNumbers = operation();
+                    if (validNumbers) break;
+                }
+                
+                if (!validNumbers) return null;  // Failed to generate valid numbers
+                
+                // Remove lastNum and add our two new numbers
+                numbers.pop();
+                numbers.push(...validNumbers);
+            }
+            
+            return numbers;
+        };
+
+        // Keep trying until we get a valid puzzle with a solution
+        let puzzle = null;
+        while (!puzzle) {
+            const candidate = generateBackwards();
+            if (candidate && this.findSolution(candidate)) {
+                puzzle = candidate;
+            }
+        }
+
+        // Shuffle the numbers
+        return puzzle.sort(() => Math.random() - 0.5);
     }
 
     initializeGame() {
@@ -243,6 +327,13 @@ class MathGame {
             this.failureScreen.style.display = 'none';
             this.initializeGame();  // Start new game with new numbers
         });
+
+        // Add solution screen try again button listener
+        const solutionTryAgainButton = this.solutionScreen.querySelector('.try-again');
+        solutionTryAgainButton.addEventListener('click', () => {
+            this.solutionScreen.style.display = 'none';
+            this.resetGame();  // Reset with same numbers
+        });
     }
 
     processOperation(quadrant) {
@@ -252,6 +343,34 @@ class MathGame {
         const num1 = parseInt(slots[0].firstChild.textContent);
         const num2 = parseInt(slots[1].firstChild.textContent);
         const operation = quadrant.dataset.operation;
+
+        // Check for invalid division cases
+        if (operation === 'divide') {
+            if (num2 === 0 || num1 % num2 !== 0) {
+                // Add invalid class to trigger shake
+                quadrant.classList.add('invalid');
+                
+                // Return numbers to pool
+                const numberPool = document.querySelector('.number-pool');
+                const numbers = [slots[0].firstChild, slots[1].firstChild];
+                
+                numbers.forEach(num => {
+                    if (num) {
+                        numberPool.appendChild(num);
+                        this.placedNumbers--;
+                    }
+                });
+                
+                this.updateDraggableState();
+                
+                // Remove invalid class after animation
+                setTimeout(() => {
+                    quadrant.classList.remove('invalid');
+                }, 400);
+                
+                return;
+            }
+        }
 
         let result;
         switch(operation) {
@@ -335,21 +454,21 @@ class MathGame {
                 const num2 = numbers[j];
                 const remainingNums = numbers.filter((_, idx) => idx !== i && idx !== j);
                 
-                // Only try operations that result in non-negative integers
+                // Try all possible operations (but skip if result is negative)
                 const operations = [
                     { result: num1 + num2, symbol: '+' },
                     { result: num1 - num2 >= 0 ? num1 - num2 : null, symbol: '-' },
-                    { result: num2 - num1 >= 0 ? num2 - num1 : null, symbol: '-' },  // Add reverse subtraction
+                    { result: num2 - num1 >= 0 ? num2 - num1 : null, symbol: '-' },
                     { result: num1 * num2, symbol: '×' },
                     { result: num1 % num2 === 0 ? num1 / num2 : null, symbol: '÷' },
-                    { result: num2 % num1 === 0 ? num2 / num1 : null, symbol: '÷' }  // Add reverse division
+                    { result: num2 % num1 === 0 ? num2 / num1 : null, symbol: '÷' }
                 ];
 
                 for (const op of operations) {
-                    if (op.result === null || op.result < 0) continue;  // Skip negative results for hints
+                    if (op.result === null || op.result < 0) continue;  // Skip negative results
                     
                     const step1 = {
-                        nums: [num1, num2],
+                        nums: op.symbol === '-' && num2 > num1 ? [num2, num1] : [num1, num2],  // Swap numbers if needed for subtraction
                         operation: op.symbol,
                         result: op.result
                     };
@@ -373,21 +492,21 @@ class MathGame {
                 const num2 = numbers[j];
                 const remainingNums = numbers.filter((_, idx) => idx !== i && idx !== j);
                 
-                // Match the operations from findSolution (non-negative integers only)
+                // Try all possible operations (but skip if result is negative)
                 const operations = [
                     { result: num1 + num2, symbol: '+' },
                     { result: num1 - num2 >= 0 ? num1 - num2 : null, symbol: '-' },
-                    { result: num2 - num1 >= 0 ? num2 - num1 : null, symbol: '-' },  // Add reverse subtraction
+                    { result: num2 - num1 >= 0 ? num2 - num1 : null, symbol: '-' },
                     { result: num1 * num2, symbol: '×' },
                     { result: num1 % num2 === 0 ? num1 / num2 : null, symbol: '÷' },
-                    { result: num2 % num1 === 0 ? num2 / num1 : null, symbol: '÷' }  // Add reverse division
+                    { result: num2 % num1 === 0 ? num2 / num1 : null, symbol: '÷' }
                 ];
 
                 for (const op of operations) {
-                    if (op.result === null || op.result < 0) continue;  // Skip negative results for hints
+                    if (op.result === null || op.result < 0) continue;  // Skip negative results
                     
                     const newStep = {
-                        nums: [num1, num2],
+                        nums: op.symbol === '-' && num2 > num1 ? [num2, num1] : [num1, num2],  // Swap numbers if needed for subtraction
                         operation: op.symbol,
                         result: op.result
                     };

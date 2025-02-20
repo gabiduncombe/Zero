@@ -22,6 +22,7 @@ body {
     position: relative;
     margin: 0 auto;
     margin-top: 12px;  /* Changed from 24px to 12px */
+    transition: filter 0.5s ease-out;
 }
 
 .number-pool {
@@ -119,23 +120,53 @@ body {
     position: relative;
 }
 
-.victory-screen {
+/* Common styles for all overlay screens */
+.victory-screen,
+.failure-screen,
+.solution-screen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(255, 255, 255, 0.35);
-    display: flex;
+    display: none;  /* Back to display: none */
     justify-content: center;
     align-items: center;
     z-index: 1000;
     backdrop-filter: blur(8px);
 }
 
-/* Add styles for the game container when victory screen is shown */
-.victory-screen:not([style*="none"]) + .game-container {
-    filter: blur(8px);
+/* When visible */
+.victory-screen:not([style*="display: none"]),
+.failure-screen:not([style*="display: none"]),
+.solution-screen:not([style*="display: none"]) {
+    opacity: 1;
+    pointer-events: auto;  /* Re-enable clicks */
+    background-color: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(8px);
+}
+
+/* Content fade in */
+.victory-content,
+.failure-content,
+.solution-content {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease-out 0.2s, transform 0.3s ease-out 0.2s;  /* Delay start until backdrop begins */
+}
+
+/* When parent is visible */
+.victory-screen:not([style*="display: none"]) .victory-content,
+.failure-screen:not([style*="display: none"]) .failure-content,
+.solution-screen:not([style*="display: none"]) .solution-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Game container blur transition */
+.game-container {
+    transition: filter 0.5s ease-out;
 }
 
 .victory-content {
@@ -162,10 +193,12 @@ body {
 /* Common styles for all buttons */
 .give-up-button, .reset-button,
 .start-over, .new-puzzle,
-.redo-button, .play-again {
+.redo-button, .play-again,
+.try-again {
+    position: relative;
     font-family: 'Inter', sans-serif;
     padding: 6px 16px;
-    background-color: #1C1C1E;
+    background-color: #222222;
     color: white;
     border: none;
     border-radius: 999px;
@@ -174,15 +207,17 @@ body {
     font-weight: 600;
     height: 32px;
     min-width: 80px;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: background-color 0.1s ease, transform 0.1s ease;
 }
 
-/* Common hover effect */
+/* Hover effect */
 .give-up-button:hover, .reset-button:hover,
 .start-over:hover, .new-puzzle:hover,
-.redo-button:hover, .play-again:hover {
-    opacity: 0.8;
-    transform: scale(1.1);
+.redo-button:hover, .play-again:hover,
+.try-again:hover {
+    background-color: #333333;
+    transform: scale(1.05);
+    transform-origin: center;
 }
 
 .button-container {
@@ -239,20 +274,6 @@ body {
     cursor: none;
 }
 
-.solution-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.35);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    backdrop-filter: blur(8px);
-}
-
 .solution-content {
     text-align: center;
     color: black;
@@ -278,14 +299,9 @@ body {
     color: black;
 }
 
-/* Add blur effect to game container when solution is shown */
-.solution-screen:not([style*="none"]) + .game-container {
-    filter: blur(8px);
-}
-
 .game-header {
     width: 100%;
-    background-color: #1C1C1E;
+    background-color: #222222;
     color: white;
     text-align: center;
     height: 72px;  /* Keep fixed height */
@@ -335,20 +351,6 @@ body {
     }
 }
 
-.failure-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.35);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    backdrop-filter: blur(8px);
-}
-
 .failure-content {
     text-align: center;
 }
@@ -367,27 +369,19 @@ body {
     justify-content: center;
 }
 
-.start-over,
-.new-puzzle {
-    font-family: 'Inter', sans-serif;
-    padding: 6px 16px;
-    background-color: #1C1C1E;
-    color: white;
-    border: none;
-    border-radius: 999px;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
-    height: 32px;
-    min-width: 80px;
-    transition: opacity 0.2s ease;
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
 }
 
-.start-over:hover,
-.new-puzzle:hover {
-    opacity: 0.8;
+.quadrant.invalid {
+    animation: shake 0.15s cubic-bezier(.07,0,.87,.97) both;
 }
 
-.failure-screen:not([style*="none"]) + .game-container {
+/* Add this to handle game container blur for all overlays */
+.victory-screen:not([style*="display: none"]) ~ .game-container,
+.failure-screen:not([style*="display: none"]) ~ .game-container,
+.solution-screen:not([style*="display: none"]) ~ .game-container {
     filter: blur(8px);
 } 
