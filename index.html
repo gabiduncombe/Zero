@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Operations Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="victory-screen" style="display: none;">
+        <div class="victory-content">
+            <h1>Congratulations!</h1>
+            <div class="victory-buttons">
+                <button class="redo-button">Redo</button>
+                <button class="play-again">New Game</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <button class="give-up-button">Give Up</button>
+        <button class="reset-button">Reset</button>
+    </div>
+
+    <div class="game-container">
+        <div class="number-pool">
+            <!-- Numbers will be generated here -->
+        </div>
+        
+        <div class="operations-grid">
+            <div class="quadrant" data-operation="add">
+                <div class="slot" data-slot="1"></div>
+                <div class="slot" data-slot="2"></div>
+                <div class="operation-symbol">+</div>
+            </div>
+            <div class="quadrant" data-operation="subtract">
+                <div class="slot" data-slot="1"></div>
+                <div class="slot" data-slot="2"></div>
+                <div class="operation-symbol">-</div>
+            </div>
+            <div class="quadrant" data-operation="multiply">
+                <div class="slot" data-slot="1"></div>
+                <div class="slot" data-slot="2"></div>
+                <div class="operation-symbol">×</div>
+            </div>
+            <div class="quadrant" data-operation="divide">
+                <div class="slot" data-slot="1"></div>
+                <div class="slot" data-slot="2"></div>
+                <div class="operation-symbol">÷</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="moves-counter">Moves Remaining: <span>0</span></div>
+
+    <div class="solution-screen" style="display: none;">
+        <div class="solution-content">
+            <h1>Sorry. Here's the solution:</h1>
+            <div class="solution-steps"></div>
+            <div class="victory-buttons">
+                <button class="play-again">New Game</button>
+            </div>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html> 
