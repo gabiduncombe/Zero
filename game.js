@@ -8,6 +8,7 @@ class MathGame {
         this.movesDisplay = document.querySelector('.moves-counter span');
         this.minMoves = 3;  // Store minimum moves for current puzzle
         this.solutionScreen = document.querySelector('.solution-screen');  // Make sure this exists
+        this.failureScreen = document.querySelector('.failure-screen');
         this.initializeGame();
         this.setupEventListeners();
     }
@@ -86,7 +87,16 @@ class MathGame {
     }
 
     updateMovesDisplay() {
-        this.movesDisplay.textContent = this.moves;
+        const dots = document.querySelectorAll('.move-dot');
+        const movesUsed = 3 - this.moves;  // Convert remaining moves to used moves
+        
+        dots.forEach((dot, index) => {
+            if (index < movesUsed) {
+                dot.classList.add('used');
+            } else {
+                dot.classList.remove('used');
+            }
+        });
     }
 
     setupEventListeners() {
@@ -141,9 +151,6 @@ class MathGame {
                 // If dropped directly on a slot, use that slot
                 const targetSlot = e.target.closest('.slot');
                 if (targetSlot && !targetSlot.hasChildNodes()) {
-                    if (draggingNumber.closest('.number-pool')) {
-                        this.placedNumbers++;
-                    }
                     targetSlot.appendChild(draggingNumber);
                     this.updateDraggableState();
                     this.updateQuadrantState(quadrant);
@@ -155,9 +162,6 @@ class MathGame {
                     .find(slot => !slot.hasChildNodes());
                 
                 if (emptySlot) {
-                    if (draggingNumber.closest('.number-pool')) {
-                        this.placedNumbers++;
-                    }
                     emptySlot.appendChild(draggingNumber);
                     this.updateDraggableState();
                     this.updateQuadrantState(quadrant);
@@ -225,6 +229,20 @@ class MathGame {
             this.solutionScreen.style.display = 'none';
             this.initializeGame();
         });
+
+        // Add failure screen try again button listener
+        const startOverButton = document.querySelector('.start-over');
+        const newPuzzleButton = document.querySelector('.new-puzzle');
+
+        startOverButton.addEventListener('click', () => {
+            this.failureScreen.style.display = 'none';
+            this.resetGame();  // Reset with same numbers
+        });
+
+        newPuzzleButton.addEventListener('click', () => {
+            this.failureScreen.style.display = 'none';
+            this.initializeGame();  // Start new game with new numbers
+        });
     }
 
     processOperation(quadrant) {
@@ -272,11 +290,14 @@ class MathGame {
         this.moves--;
         this.updateMovesDisplay();
 
-        // Check if game is won
-        if (result === 0 && this.moves === 0) {  // Changed condition to check for 0 moves left
-            this.victoryScreen.querySelector('h1').textContent = 
-                `Congratulations!`;
-            this.victoryScreen.style.display = 'flex';
+        // Check if game is won or lost
+        if (this.moves === 0) {
+            if (result === 0) {
+                this.victoryScreen.querySelector('h1').textContent = 'Congratulations!';
+                this.victoryScreen.style.display = 'flex';
+            } else {
+                this.failureScreen.style.display = 'flex';
+            }
         }
 
         // After processing an operation, update quadrant state
