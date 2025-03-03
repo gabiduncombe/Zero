@@ -34,15 +34,15 @@ class MathGame {
                     () => {
                         let attempts = 0;
                         while (attempts < 20) {
-                            const a = Math.floor(Math.random() * 20) + 1;  // 1-20
-                            const b = Math.floor(Math.random() * 20) + 1;  // 1-20
-                            if (a % b === 0 || b % a === 0) continue;  // Add back division constraint
+                            const a = Math.floor(Math.random() * 30) + 1;  // 1-30
+                            const b = Math.floor(Math.random() * 30) + 1;  // 1-30
+                            if (a % b === 0 || b % a === 0) continue;  // Keep division constraint
                             if (usedNumbers.has(a)) {
                                 attempts++;
                                 continue;
                             }
                             const c = lastNum - a;
-                            if (c >= 1 && c <= 20 && !usedNumbers.has(c)) {
+                            if (c >= 1 && c <= 30 && !usedNumbers.has(c)) {  // Check against new range
                                 usedNumbers.add(a);
                                 usedNumbers.add(c);
                                 return [a, c];
@@ -55,9 +55,9 @@ class MathGame {
                     () => {
                         let attempts = 0;
                         while (attempts < 20) {
-                            const b = Math.floor(Math.random() * 20) + 1;  // 1-20
+                            const b = Math.floor(Math.random() * 30) + 1;  // 1-30
                             const a = lastNum + b;
-                            if (a >= 1 && a <= 20 && !usedNumbers.has(a)) {
+                            if (a >= 1 && a <= 30 && !usedNumbers.has(a)) {  // Check against new range
                                 usedNumbers.add(a);
                                 usedNumbers.add(b);
                                 return [a, b];
@@ -71,8 +71,8 @@ class MathGame {
                         if (lastNum === 0) {
                             let attempts = 0;
                             while (attempts < 20) {
-                                const a = Math.floor(Math.random() * 20) + 1;  // 1-20
-                                const b = Math.floor(Math.random() * 20) + 1;  // 1-20
+                                const a = Math.floor(Math.random() * 30) + 1;  // 1-30
+                                const b = Math.floor(Math.random() * 30) + 1;  // 1-30
                                 if (!usedNumbers.has(a) && !usedNumbers.has(b)) {
                                     usedNumbers.add(a);
                                     usedNumbers.add(b);
@@ -84,10 +84,10 @@ class MathGame {
                         }
                         
                         const factors = [];
-                        for (let n = 1; n <= Math.min(20, lastNum); n++) {
+                        for (let n = 1; n <= Math.min(30, lastNum); n++) {
                             if (lastNum % n === 0) {
                                 const other = lastNum / n;
-                                if (other >= 1 && other <= 20 && !usedNumbers.has(n) && !usedNumbers.has(other)) {
+                                if (other >= 1 && other <= 30 && !usedNumbers.has(n) && !usedNumbers.has(other)) {
                                     factors.push([n, other]);
                                 }
                             }
@@ -102,9 +102,9 @@ class MathGame {
                     () => {
                         let attempts = 0;
                         while (attempts < 20) {
-                            const b = Math.floor(Math.random() * 20) + 1;  // 1-20
+                            const b = Math.floor(Math.random() * 30) + 1;  // 1-30
                             const a = lastNum * b;
-                            if (a >= 1 && a <= 20 && !usedNumbers.has(a) && !usedNumbers.has(b)) {
+                            if (a >= 1 && a <= 30 && !usedNumbers.has(a) && !usedNumbers.has(b)) {
                                 usedNumbers.add(a);
                                 usedNumbers.add(b);
                                 return [a, b];
@@ -155,7 +155,7 @@ class MathGame {
 
         if (!puzzle) {
             console.error('Failed to generate valid puzzle');
-            return [16, 17, 18, 19];  // Return exactly 4 numbers
+            return [17, 23, 29, 13];  // Use some prime numbers from new range
         }
 
         return puzzle.sort(() => Math.random() - 0.5);
