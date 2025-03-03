@@ -699,7 +699,10 @@ class MathGame {
             });
             solutionStepsDiv.appendChild(startingNumbersDiv);
             
-            // Add solution steps with blur
+            // Disable new puzzle button initially
+            const newPuzzleButton = this.solutionScreen.querySelector('.play-again');
+            newPuzzleButton.disabled = true;
+
             solution.forEach((step, index) => {
                 const stepDiv = document.createElement('div');
                 stepDiv.className = 'solution-step';
@@ -718,7 +721,12 @@ class MathGame {
                     
                     stepDiv.addEventListener('click', () => {
                         stepDiv.classList.remove('blurred');
-                        this.revealedHints.add(index);  // Track that this hint was revealed
+                        this.revealedHints.add(index);
+
+                        // Enable new puzzle button if all hints are revealed
+                        if (this.revealedHints.size === 3) {
+                            newPuzzleButton.disabled = false;
+                        }
                     });
                 }
 
@@ -757,10 +765,11 @@ class MathGame {
                 solutionStepsDiv.appendChild(stepDiv);
             });
             
-            // Update button text
-            const returnButton = this.solutionScreen.querySelector('.try-again');
-            returnButton.innerHTML = '<span>←</span>Return to puzzle';
-            
+            // Enable button if all hints were already revealed
+            if (this.revealedHints.size === 3) {
+                newPuzzleButton.disabled = false;
+            }
+
             this.solutionScreen.style.display = 'flex';
         }
     }
