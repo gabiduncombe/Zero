@@ -463,11 +463,11 @@ button {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Match quadrant colors */
-.solution-step[data-operation="add"] { background-color: rgba(127, 88, 175, 0.2); }     /* #7F58AF */
-.solution-step[data-operation="subtract"] { background-color: rgba(100, 197, 235, 0.2); } /* #64C5EB */
-.solution-step[data-operation="multiply"] { background-color: rgba(232, 77, 138, 0.2); }  /* #E84D8A */
-.solution-step[data-operation="divide"] { background-color: rgba(254, 179, 38, 0.2); }    /* #FEB326 */
+/* Match quadrant colors - using exact same colors */
+.solution-step[data-operation="add"] { background-color: #7F58AF; }     /* Same as quadrant */
+.solution-step[data-operation="subtract"] { background-color: #64C5EB; } /* Same as quadrant */
+.solution-step[data-operation="multiply"] { background-color: #E84D8A; } /* Same as quadrant */
+.solution-step[data-operation="divide"] { background-color: #FEB326; }   /* Same as quadrant */
 
 .solution-number {
     width: 48px;
@@ -492,4 +492,25 @@ button {
     font-size: 20px;
     color: #222222;
     margin: 0 4px;
+}
+
+.solution-starting-numbers {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.solution-starting-number {
+    width: 48px;
+    height: 48px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 } 

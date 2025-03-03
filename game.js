@@ -614,8 +614,8 @@ class MathGame {
                 
                 const operations = [
                     { result: num1 + num2, symbol: '+' },
-                    { result: num1 - num2 >= 0 ? num1 - num2 : null, symbol: '-' },
-                    { result: num2 - num1 >= 0 ? num2 - num1 : null, symbol: '-' },
+                    { result: num1 - num2 >= 0 ? num1 - num2 : null, symbol: '−' },
+                    { result: num2 - num1 >= 0 ? num2 - num1 : null, symbol: '−' },
                     { result: num1 * num2, symbol: '×' },
                     { result: num1 % num2 === 0 ? num1 / num2 : null, symbol: '÷', nums: [num1, num2] },
                     { result: num2 % num1 === 0 ? num2 / num1 : null, symbol: '÷', nums: [num2, num1] }
@@ -655,8 +655,8 @@ class MathGame {
                 // Try all possible operations (but skip if result is negative)
                 const operations = [
                     { result: num1 + num2, symbol: '+' },
-                    { result: num1 - num2 >= 0 ? num1 - num2 : null, symbol: '-' },
-                    { result: num2 - num1 >= 0 ? num2 - num1 : null, symbol: '-' },
+                    { result: num1 - num2 >= 0 ? num1 - num2 : null, symbol: '−' },
+                    { result: num2 - num1 >= 0 ? num2 - num1 : null, symbol: '−' },
                     { result: num1 * num2, symbol: '×' },
                     { result: num1 % num2 === 0 ? num1 / num2 : null, symbol: '÷', nums: [num1, num2] },
                     { result: num2 % num1 === 0 ? num2 / num1 : null, symbol: '÷', nums: [num2, num1] }
@@ -685,31 +685,48 @@ class MathGame {
             const solutionStepsDiv = this.solutionScreen.querySelector('.solution-steps');
             solutionStepsDiv.innerHTML = '';
             
+            // Add starting numbers
+            const startingNumbersDiv = document.createElement('div');
+            startingNumbersDiv.className = 'solution-starting-numbers';
+            this.initialNumbers.forEach(num => {
+                const numDiv = document.createElement('div');
+                numDiv.className = 'solution-starting-number';
+                numDiv.textContent = num;
+                startingNumbersDiv.appendChild(numDiv);
+            });
+            solutionStepsDiv.appendChild(startingNumbersDiv);
+            
+            // Add solution steps
             solution.forEach(step => {
                 const stepDiv = document.createElement('div');
                 stepDiv.className = 'solution-step';
                 
-                // First number
+                // Set operation type for color
+                const operationType = {
+                    '+': 'add',
+                    '−': 'subtract',  // Make sure this is the correct minus sign
+                    '×': 'multiply',
+                    '÷': 'divide'
+                }[step.operation];
+                stepDiv.setAttribute('data-operation', operationType);
+                
+                // Create number and operator elements
                 const num1 = document.createElement('div');
                 num1.className = 'solution-number';
                 num1.textContent = step.nums[0];
                 
-                // Operator
                 const op = document.createElement('div');
                 op.className = 'solution-operator';
                 op.textContent = step.operation;
                 
-                // Second number
                 const num2 = document.createElement('div');
                 num2.className = 'solution-number';
                 num2.textContent = step.nums[1];
                 
-                // Equals
                 const equals = document.createElement('div');
                 equals.className = 'solution-equals';
                 equals.textContent = '=';
                 
-                // Result
                 const result = document.createElement('div');
                 result.className = 'solution-number';
                 result.textContent = step.result;
