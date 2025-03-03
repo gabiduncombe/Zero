@@ -475,18 +475,20 @@ class MathGame {
                 // Add invalid class to trigger shake
                 quadrant.classList.add('invalid');
                 
-                // Return numbers to pool
+                // Return numbers to pool and clear selection state
                 const numberPool = document.querySelector('.number-pool');
                 const numbers = [slots[0].firstChild, slots[1].firstChild];
                 
                 numbers.forEach(num => {
                     if (num) {
+                        num.classList.remove('number-selected');  // Remove selection state
                         numberPool.appendChild(num);
                         this.placedNumbers--;
                     }
                 });
                 
                 this.updateDraggableState();
+                this.clearQuadrantSelection();
                 
                 // Remove invalid class after animation
                 setTimeout(() => {
