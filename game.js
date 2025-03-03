@@ -34,9 +34,9 @@ class MathGame {
                     () => {
                         let attempts = 0;
                         while (attempts < 20) {
-                            const a = Math.floor(Math.random() * 5) + 16;  // 16-20
-                            const b = Math.floor(Math.random() * 5) + 16;  // 16-20
-                            if (a % b === 0 || b % a === 0) continue;  // Skip if they divide evenly
+                            const a = Math.floor(Math.random() * 20) + 1;  // 1-20
+                            const b = Math.floor(Math.random() * 20) + 1;  // 1-20
+                            if (a % b === 0 || b % a === 0) continue;  // Add back division constraint
                             if (usedNumbers.has(a)) {
                                 attempts++;
                                 continue;
@@ -55,7 +55,7 @@ class MathGame {
                     () => {
                         let attempts = 0;
                         while (attempts < 20) {
-                            const b = Math.floor(Math.random() * 5) + 16;  // 16-20
+                            const b = Math.floor(Math.random() * 20) + 1;  // 1-20
                             const a = lastNum + b;
                             if (a >= 1 && a <= 20 && !usedNumbers.has(a)) {
                                 usedNumbers.add(a);
@@ -71,8 +71,8 @@ class MathGame {
                         if (lastNum === 0) {
                             let attempts = 0;
                             while (attempts < 20) {
-                                const a = Math.floor(Math.random() * 5) + 16;  // 16-20
-                                const b = Math.floor(Math.random() * 5) + 16;  // 16-20
+                                const a = Math.floor(Math.random() * 20) + 1;  // 1-20
+                                const b = Math.floor(Math.random() * 20) + 1;  // 1-20
                                 if (!usedNumbers.has(a) && !usedNumbers.has(b)) {
                                     usedNumbers.add(a);
                                     usedNumbers.add(b);
@@ -102,7 +102,7 @@ class MathGame {
                     () => {
                         let attempts = 0;
                         while (attempts < 20) {
-                            const b = Math.floor(Math.random() * 5) + 16;  // 16-20
+                            const b = Math.floor(Math.random() * 20) + 1;  // 1-20
                             const a = lastNum * b;
                             if (a >= 1 && a <= 20 && !usedNumbers.has(a) && !usedNumbers.has(b)) {
                                 usedNumbers.add(a);
