@@ -461,6 +461,73 @@ class MathGame {
                 }
             }
         });
+
+        // Add touch event handlers alongside existing mouse events
+        document.addEventListener('touchstart', (e) => {
+            if (e.target.classList.contains('number')) {
+                e.preventDefault(); // Prevent scrolling while dragging
+                const touch = e.touches[0];
+                const number = e.target;
+                
+                // Get the exact position within the number element
+                const rect = number.getBoundingClientRect();
+                this.touchOffset = {
+                    x: touch.clientX - rect.left,
+                    y: touch.clientY - rect.top
+                };
+                
+                number.classList.add('dragging');
+                // Create visual feedback
+                number.style.transform = 'scale(1.1)';
+                number.style.boxShadow = '0 8px 16px rgba(0,0,0,0.2)';
+            }
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            const draggingNumber = document.querySelector('.number.dragging');
+            if (draggingNumber) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                
+                // Add some offset to position number above finger
+                draggingNumber.style.position = 'fixed';
+                draggingNumber.style.left = `${touch.clientX - this.touchOffset.x}px`;
+                draggingNumber.style.top = `${touch.clientY - this.touchOffset.y - 20}px`; // Lift above finger
+                
+                // Highlight potential drop targets
+                this.highlightDropTarget(touch.clientX, touch.clientY);
+            }
+        });
+
+        document.addEventListener('touchend', (e) => {
+            const draggingNumber = document.querySelector('.number.dragging');
+            if (draggingNumber) {
+                const touch = e.changedTouches[0];
+                // Get all elements at the touch point
+                const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+                // Find the first slot element
+                const slot = elements.find(el => el.classList.contains('slot'));
+                
+                if (slot && !slot.hasChildNodes()) {
+                    // Handle drop into slot
+                    this.handleDrop(draggingNumber, slot);
+                } else {
+                    // If not dropped in a slot, return to number pool
+                    const numberPool = document.querySelector('.number-pool');
+                    numberPool.appendChild(draggingNumber);
+                }
+                
+                draggingNumber.classList.remove('dragging');
+                draggingNumber.style.position = '';
+                draggingNumber.style.left = '';
+                draggingNumber.style.top = '';
+                draggingNumber.style.transform = '';
+                draggingNumber.style.boxShadow = '';
+                
+                // Remove any highlight from drop targets
+                this.clearDropTargetHighlights();
+            }
+        });
     }
 
     processOperation(quadrant) {
@@ -714,14 +781,29 @@ class MathGame {
                 if (!this.revealedHints.has(index)) {
                     stepDiv.classList.add('blurred');
                     
+                    // Add next-step class to the first unrevealed step
+                    if (index === 0 || this.revealedHints.has(index - 1)) {
+                        stepDiv.classList.add('next-step');
+                    }
+                    
                     const revealText = document.createElement('div');
                     revealText.className = 'reveal-text';
-                    revealText.textContent = 'Click to reveal next step';
+                    // Check if device is touch-based
+                    const isTouchDevice = ('ontouchstart' in window) || 
+                        (navigator.maxTouchPoints > 0) || 
+                        (navigator.msMaxTouchPoints > 0);
+                    revealText.textContent = isTouchDevice ? 'Tap to reveal next step' : 'Click to reveal next step';
                     stepDiv.appendChild(revealText);
                     
                     stepDiv.addEventListener('click', () => {
-                        stepDiv.classList.remove('blurred');
+                        stepDiv.classList.remove('blurred', 'next-step');
                         this.revealedHints.add(index);
+
+                        // Show reveal text on the next step if it exists
+                        const nextStep = stepDiv.nextElementSibling;
+                        if (nextStep && nextStep.classList.contains('blurred')) {
+                            nextStep.classList.add('next-step');
+                        }
 
                         // Enable new puzzle button if all hints are revealed
                         if (this.revealedHints.size === 3) {
@@ -805,6 +887,63 @@ class MathGame {
             document.querySelectorAll('.quadrant').forEach(q => {
                 q.classList.remove('dimmed');
             });
+        }
+    }
+
+    // Add new helper methods
+    findDropTarget(x, y) {
+        // Check in a slightly larger area around the touch point
+        const elements = document.elementsFromPoint(x, y);
+        return elements.find(el => el.classList.contains('slot'));
+    }
+
+    highlightDropTarget(x, y) {
+        // Remove previous highlights
+        document.querySelectorAll('.slot').forEach(slot => {
+            slot.classList.remove('potential-drop');
+        });
+        
+        // Get all elements within a larger hit area
+        const hitArea = 40; // pixels
+        const elements = document.elementsFromPoint(x, y);
+        elements.push(...document.elementsFromPoint(x - hitArea, y));
+        elements.push(...document.elementsFromPoint(x + hitArea, y));
+        elements.push(...document.elementsFromPoint(x, y - hitArea));
+        elements.push(...document.elementsFromPoint(x, y + hitArea));
+        
+        const potentialSlot = [...new Set(elements)].find(el => 
+            el.classList.contains('slot') && !el.hasChildNodes()
+        );
+        
+        if (potentialSlot) {
+            potentialSlot.classList.add('potential-drop');
+        }
+    }
+
+    clearDropTargetHighlights() {
+        document.querySelectorAll('.slot').forEach(slot => {
+            slot.classList.remove('potential-drop');
+        });
+    }
+
+    handleDrop(number, slot) {
+        // Early return if the slot already has a number
+        if (slot.hasChildNodes()) return;
+
+        // Add the number to the slot
+        slot.appendChild(number);
+        number.classList.remove('dragging');
+        this.placedNumbers++;
+        
+        // Update draggable state of remaining numbers
+        this.updateDraggableState();
+        
+        // Check if we have two numbers in the quadrant
+        const quadrant = slot.closest('.quadrant');
+        const slots = quadrant.querySelectorAll('.slot');
+        if (Array.from(slots).every(s => s.hasChildNodes())) {
+            this.readyQuadrant = quadrant;
+            quadrant.classList.add('ready');
         }
     }
 }

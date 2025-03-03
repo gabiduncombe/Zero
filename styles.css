@@ -14,6 +14,7 @@ body {
     align-items: center;
     margin: 0 auto;
     overflow-x: hidden;  /* Prevent horizontal scroll */
+    padding-top: 72px;  /* Match header height */
 }
 
 .game-container {
@@ -75,10 +76,11 @@ body {
     display: grid;
     grid-template-columns: repeat(2, 200px);
     grid-template-rows: repeat(2, 200px);
-    gap: 8px;  /* Adjust this value to change spacing between quadrants */
-    width: fit-content;
+    gap: 8px;
+    width: 100%;
     margin: 0 auto;
     margin-top: 24px;
+    justify-content: center;  /* Center the grid horizontally */
 }
 
 .quadrant {
@@ -118,8 +120,9 @@ body {
     background-color: rgba(255, 255, 255, 0.4);  /* Remove box-shadow */
 }
 
-.slot:empty:hover {
-    background-color: rgba(255, 255, 255, 0.4);  /* Match drag-over state */
+.slot:empty:hover,
+.slot.potential-drop {
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 .operation-symbol {
@@ -327,9 +330,9 @@ body {
 
 .game-header {
     width: 100vw;
-    margin-left: calc((100vw - 100%) / -2);
-    left: 0;  /* Ensure header starts from viewport left edge */
-    right: 0;  /* Ensure header extends to viewport right edge */
+    position: fixed;  /* Change to fixed positioning */
+    top: 0;
+    left: 0;
     background-color: #222222;
     color: white;
     text-align: center;
@@ -340,7 +343,6 @@ body {
     align-items: center;
     gap: 4px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    position: relative;
     z-index: 2;
 }
 
@@ -378,11 +380,120 @@ body {
 @media (max-width: 480px) {
     .game-container {
         width: 100%;
-        /* Remove padding: 5px; */
+        margin-top: 24px;  /* Increase spacing below header on mobile */
     }
 
     .number-pool {
         gap: 10px;
+        margin-bottom: 16px;  /* Add some space below number pool */
+    }
+
+    .operations-grid {
+        grid-template-columns: repeat(2, 150px);
+        grid-template-rows: repeat(2, 150px);
+        gap: 8px;
+        width: calc(100% - 32px);  /* Add some padding from edges */
+        justify-content: center;
+    }
+
+    .quadrant {
+        width: 150px;
+        height: 150px;
+        padding: 16px;
+        gap: 12px;  /* Adjust gap between slots */
+    }
+
+    .button-container {
+        bottom: 16px;
+        left: 16px;
+        right: 16px;
+        width: calc(100% - 32px);
+    }
+
+    /* Adjust font sizes for mobile */
+    .game-header h1 {
+        font-size: 20px;
+    }
+
+    .game-header p {
+        font-size: 12px;
+    }
+
+    /* Prevent zoom on input focus */
+    .number {
+        font-size: 16px;  /* Minimum font size to prevent zoom */
+    }
+
+    /* Ensure slots maintain aspect ratio */
+    .slot {
+        width: 48px;
+        height: 48px;
+    }
+
+    /* Ensure numbers match slot size */
+    .number {
+        width: 48px;
+        height: 48px;
+    }
+    
+    /* Keep numbers same size when in slots */
+    .slot .number {
+        width: 48px;
+        height: 48px;
+        font-size: 16px;
+    }
+    
+    /* Maintain size during drag */
+    .number.dragging {
+        width: 48px !important;
+        height: 48px !important;
+    }
+
+    /* Adjust operation symbol size */
+    .operation-symbol {
+        font-size: 24px;  /* Slightly smaller for mobile */
+    }
+
+    /* Adjust solution numbers for mobile */
+    .solution-number,
+    .solution-starting-number {
+        width: 48px;
+        height: 48px;
+        font-size: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Adjust solution step containers */
+    .solution-step {
+        gap: 8px;
+        padding: 8px;
+        margin: 8px 0;
+    }
+
+    .solution-step-content {
+        padding: 8px;
+        gap: 8px;
+    }
+
+    /* Adjust operator and equals signs */
+    .solution-operator,
+    .solution-equals {
+        font-size: 16px;
+        margin: 0 2px;  /* Reduce margin between elements */
+    }
+
+    /* Adjust spacing between solution steps */
+    .solution-starting-numbers {
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+}
+
+/* Add viewport height adjustments for mobile browsers */
+@supports (-webkit-touch-callout: none) {
+    /* iOS specific fix for 100vh */
+    .game-container {
+        min-height: -webkit-fill-available;
     }
 }
 
@@ -592,7 +703,8 @@ button {
     z-index: 1;
 }
 
-.solution-step.blurred:hover .reveal-text {
+/* Show reveal text by default for the next unrevealed step */
+.solution-step.blurred.next-step .reveal-text {
     opacity: 1;
 }
 
@@ -604,4 +716,24 @@ button {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+/* Touch-specific styles - only apply on touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .slot.potential-drop {
+        background-color: rgba(255, 255, 255, 0.4);
+        transform: scale(1.05);
+        transition: all 0.2s ease;
+    }
+
+    .slot:empty:hover {
+        background-color: initial;
+    }
+
+    .number {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: none;
+    }
 } 
