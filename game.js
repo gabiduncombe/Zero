@@ -697,11 +697,30 @@ class MathGame {
             });
             solutionStepsDiv.appendChild(startingNumbersDiv);
             
-            // Add solution steps
-            solution.forEach(step => {
+            // Add solution steps with blur
+            solution.forEach((step, index) => {
                 const stepDiv = document.createElement('div');
                 stepDiv.className = 'solution-step';
-                
+
+                // Create content wrapper
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'solution-step-content';
+
+                // Add blur to second and third steps
+                if (index > 0) {
+                    stepDiv.classList.add('blurred');
+                    
+                    // Add reveal text (outside content wrapper)
+                    const revealText = document.createElement('div');
+                    revealText.className = 'reveal-text';
+                    revealText.textContent = 'Click to reveal next step';
+                    stepDiv.appendChild(revealText);
+                    
+                    stepDiv.addEventListener('click', () => {
+                        stepDiv.classList.remove('blurred');
+                    });
+                }
+
                 // Set operation type for color
                 const operationType = {
                     '+': 'add',
@@ -732,12 +751,14 @@ class MathGame {
                 result.className = 'solution-number';
                 result.textContent = step.result;
                 
-                stepDiv.append(num1, op, num2, equals, result);
+                contentDiv.append(num1, op, num2, equals, result);
+                stepDiv.appendChild(contentDiv);  // Add content wrapper to step
                 solutionStepsDiv.appendChild(stepDiv);
             });
             
-            const solutionContent = this.solutionScreen.querySelector('.solution-content h1');
-            solutionContent.textContent = 'Here\'s a solution:';
+            // Update button text
+            const returnButton = this.solutionScreen.querySelector('.try-again');
+            returnButton.innerHTML = '<span>←</span>Return to puzzle';
             
             this.solutionScreen.style.display = 'flex';
         }

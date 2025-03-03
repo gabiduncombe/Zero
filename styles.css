@@ -471,14 +471,27 @@ button {
     margin: 12px 0;
     padding: 12px;
     border-radius: 8px;
+    position: relative;  /* For absolute positioning of reveal text */
+}
+
+/* Move quadrant colors to content wrapper */
+.solution-step-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    transition: filter 0.3s ease;
+    padding: 12px;
+    border-radius: 8px;
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Match quadrant colors - using exact same colors */
-.solution-step[data-operation="add"] { background-color: #7F58AF; }     /* Same as quadrant */
-.solution-step[data-operation="subtract"] { background-color: #64C5EB; } /* Same as quadrant */
-.solution-step[data-operation="multiply"] { background-color: #E84D8A; } /* Same as quadrant */
-.solution-step[data-operation="divide"] { background-color: #FEB326; }   /* Same as quadrant */
+/* Update color assignments to target content wrapper */
+.solution-step[data-operation="add"] .solution-step-content { background-color: #7F58AF; }
+.solution-step[data-operation="subtract"] .solution-step-content { background-color: #64C5EB; }
+.solution-step[data-operation="multiply"] .solution-step-content { background-color: #E84D8A; }
+.solution-step[data-operation="divide"] .solution-step-content { background-color: #FEB326; }
 
 .solution-number {
     width: 48px;
@@ -531,4 +544,45 @@ button {
     font-size: 80px;  
     margin-top: 16px;
     margin-bottom: 24px;
+}
+
+.solution-step.blurred:hover {
+    cursor: pointer;
+}
+
+/* Create a wrapper for the solution content that gets blurred */
+.solution-step-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    transition: filter 0.3s ease;
+}
+
+.solution-step.blurred .solution-step-content {
+    filter: blur(12px);  /* Reduced blur to still show shapes */
+}
+
+/* Update reveal text to be above the blur */
+.reveal-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #222222;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 16px;
+    border-radius: 4px;
+    z-index: 1;  /* Ensure it's above the blurred content */
+}
+
+.solution-step.blurred:hover .reveal-text {
+    opacity: 1;
 } 
