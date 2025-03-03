@@ -49,7 +49,7 @@ class MathGame {
                     () => {
                         let attempts = 0;
                         while (attempts < 20) {
-                            const b = Math.floor(Math.random() * 20) + 1;  // 1-20
+                            const b = Math.floor(Math.random() * 10) + 11;  // Change to 11-20 like addition
                             if (usedNumbers.has(b)) {
                                 attempts++;
                                 continue;
@@ -432,6 +432,30 @@ class MathGame {
                 if (num2 === 0 || num1 % num2 !== 0) return; // Only check for integer division
                 result = num1 / num2;
                 break;
+        }
+
+        // Add check for intermediate results
+        if ((result < 1 || result > 20) && this.moves === 0) {  // Only check range on final move
+            quadrant.classList.add('invalid');
+            // Return numbers to pool
+            const numberPool = document.querySelector('.number-pool');
+            const numbers = [slots[0].firstChild, slots[1].firstChild];
+            
+            numbers.forEach(num => {
+                if (num) {
+                    numberPool.appendChild(num);
+                    this.placedNumbers--;
+                }
+            });
+            
+            this.updateDraggableState();
+            
+            // Remove invalid class after animation
+            setTimeout(() => {
+                quadrant.classList.remove('invalid');
+            }, 400);
+            
+            return;
         }
 
         // Remove the used numbers from their slots
