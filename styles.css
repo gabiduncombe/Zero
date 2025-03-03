@@ -12,8 +12,8 @@ body {
     padding: 0;
     gap: 20px;
     align-items: center;
-    max-width: 1440px;
     margin: 0 auto;
+    overflow-x: hidden;  /* Prevent horizontal scroll */
 }
 
 .game-container {
@@ -68,7 +68,7 @@ body {
 
 .number-pool .number.dragging,
 .slot .number.dragging {
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 1);  /* This controls the opacity */
 }
 
 .operations-grid {
@@ -326,7 +326,10 @@ body {
 }
 
 .game-header {
-    width: 100%;
+    width: 100vw;
+    margin-left: calc((100vw - 100%) / -2);
+    left: 0;  /* Ensure header starts from viewport left edge */
+    right: 0;  /* Ensure header extends to viewport right edge */
     background-color: #222222;
     color: white;
     text-align: center;
@@ -336,9 +339,9 @@ body {
     justify-content: center;
     align-items: center;
     gap: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);  /* Add subtle shadow */
-    position: relative;  /* For shadow to work properly */
-    z-index: 2;  /* Keep header above other content */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 2;
 }
 
 .game-header h1 {
@@ -601,4 +604,9 @@ button {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+.drag-image {
+    opacity: 1 !important;
+    background-color: white !important;
 } 
