@@ -636,15 +636,16 @@ class MathGame {
     }
 
     selectQuadrant(quadrant) {
-        // Always clear any existing selection first
-        this.clearQuadrantSelection();
-
-        // If we were already selected, just return (effectively just clearing)
+        // If this quadrant is already selected, unselect it
         if (this.selectedQuadrant === quadrant) {
+            this.clearQuadrantSelection();
             return;
         }
 
-        // Set new selection
+        // Clear any previous selection
+        this.clearQuadrantSelection();
+
+        // Select the new quadrant
         this.selectedQuadrant = quadrant;
         quadrant.classList.add('selected');
         
