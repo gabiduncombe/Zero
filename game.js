@@ -222,7 +222,6 @@ class MathGame {
                 
                 // Set the drag image to be a clone
                 const dragImage = e.target.cloneNode(true);
-                dragImage.classList.add('drag-image');
                 document.body.appendChild(dragImage);
                 e.dataTransfer.setDragImage(dragImage, 20, 20);
                 
