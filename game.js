@@ -22,6 +22,7 @@ class MathGame {
             // Generate 3 operations in reverse
             for (let i = 0; i < 3; i++) {
                 const lastNum = numbers[numbers.length - 1];
+                numbers.pop();  // Remove the last number since we're working backwards
                 
                 // Pick random operation and numbers that would result in lastNum
                 const ops = [
@@ -29,9 +30,13 @@ class MathGame {
                     () => {
                         let attempts = 0;
                         while (attempts < 20) {
-                            const a = Math.floor(Math.random() * 20) + 1;  // 1-20
+                            const a = Math.floor(Math.random() * 10) + 11;  // 11-20
+                            if (usedNumbers.has(a)) {
+                                attempts++;
+                                continue;
+                            }
                             const b = lastNum - a;
-                            if (b >= 1 && b <= 20 && !usedNumbers.has(a) && !usedNumbers.has(b)) {
+                            if (b >= 1 && b <= 20 && !usedNumbers.has(b)) {
                                 usedNumbers.add(a);
                                 usedNumbers.add(b);
                                 return [a, b];
@@ -45,8 +50,12 @@ class MathGame {
                         let attempts = 0;
                         while (attempts < 20) {
                             const b = Math.floor(Math.random() * 20) + 1;  // 1-20
+                            if (usedNumbers.has(b)) {
+                                attempts++;
+                                continue;
+                            }
                             const a = lastNum + b;
-                            if (a >= 1 && a <= 20 && !usedNumbers.has(a) && !usedNumbers.has(b)) {
+                            if (a >= 1 && a <= 20 && !usedNumbers.has(a)) {
                                 usedNumbers.add(a);
                                 usedNumbers.add(b);
                                 return [a, b];
@@ -116,23 +125,21 @@ class MathGame {
                 if (!validNumbers) return null;  // Failed to generate valid numbers
                 
                 // Remove lastNum and add our two new numbers
-                numbers.pop();
                 numbers.push(...validNumbers);
             }
             
-            return numbers;
+            return Array.from(usedNumbers);  // Return only the unique numbers
         };
 
         // Keep trying until we get a valid puzzle with a solution
         let puzzle = null;
         while (!puzzle) {
             const candidate = generateBackwards();
-            if (candidate && this.findSolution(candidate)) {
+            if (candidate && candidate.length === 4 && this.findSolution(candidate)) {  // Ensure exactly 4 numbers
                 puzzle = candidate;
             }
         }
 
-        // Shuffle the numbers
         return puzzle.sort(() => Math.random() - 0.5);
     }
 
@@ -280,7 +287,37 @@ class MathGame {
                 if (draggingNumber.closest('.slot')) {
                     this.placedNumbers--;
                 }
-                numberPool.appendChild(draggingNumber);
+
+                // Get all existing numbers in the pool
+                const numbers = Array.from(numberPool.children);
+                
+                // If pool is empty, just append
+                if (numbers.length === 0) {
+                    numberPool.appendChild(draggingNumber);
+                } else {
+                    // Find the nearest position based on mouse coordinates
+                    const mouseX = e.clientX;
+                    let nearestNumber = numbers[0];
+                    let minDistance = Infinity;
+                    
+                    numbers.forEach(number => {
+                        const rect = number.getBoundingClientRect();
+                        const distance = Math.abs(mouseX - (rect.left + rect.width / 2));
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            nearestNumber = number;
+                        }
+                    });
+                    
+                    // Insert before or after the nearest number based on mouse position
+                    const rect = nearestNumber.getBoundingClientRect();
+                    if (mouseX < rect.left + rect.width / 2) {
+                        numberPool.insertBefore(draggingNumber, nearestNumber);
+                    } else {
+                        numberPool.insertBefore(draggingNumber, nearestNumber.nextSibling);
+                    }
+                }
+
                 this.updateDraggableState();
                 if (quadrant) {
                     this.updateQuadrantState(quadrant);
