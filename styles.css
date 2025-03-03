@@ -347,7 +347,7 @@ body {
     font-weight: 900;
     margin: 0;
     line-height: 1;
-    letter-spacing: -0.5px;
+    letter-spacing: 2px;  /* Increase spacing between letters */
 }
 
 .game-header p {
