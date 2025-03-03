@@ -11,6 +11,7 @@ class MathGame {
         this.failureScreen = document.querySelector('.failure-screen');
         this.resetButton = document.querySelector('.reset-button');
         this.resetButton.disabled = true;  // Start disabled
+        this.selectedQuadrant = null;
         this.initializeGame();
         this.setupEventListeners();
     }
@@ -20,10 +21,10 @@ class MathGame {
             let numbers = [0];  // Start with target number
             const usedNumbers = new Set();  // Track used numbers to prevent duplicates
             
-            // Generate 4 operations in reverse
-            for (let i = 0; i < 4; i++) {
+            // Generate 3 operations in reverse (not 4)
+            for (let i = 0; i < 3; i++) {  // Change from 4 to 3
                 const lastNum = numbers[numbers.length - 1];
-                numbers.pop();  // Remove the last number since we're working backwards
+                numbers.pop();
                 
                 // Pick random operation and numbers that would result in lastNum
                 const ops = [
@@ -126,8 +127,8 @@ class MathGame {
                 // Add the new numbers
                 if (validNumbers) {
                     numbers.push(...validNumbers);
-                    console.log('Added numbers:', validNumbers);
-                    console.log('Current usedNumbers:', Array.from(usedNumbers));
+                    usedNumbers.add(validNumbers[0]);
+                    usedNumbers.add(validNumbers[1]);
                 }
             }
             
@@ -139,19 +140,20 @@ class MathGame {
         let puzzle = null;
         let attempts = 0;
         while (!puzzle && attempts < 100) {
-            console.log('Attempt:', attempts);
             const candidate = generateBackwards();
-            console.log('Candidate:', candidate);
-            if (candidate && candidate.length === 4 && this.findSolution(candidate)) {
-                puzzle = candidate;
-                console.log('Found valid puzzle:', puzzle);
+            if (candidate && candidate.length === 4) {  // Ensure exactly 4 numbers
+                const solution = this.findSolution(candidate);
+                if (solution) {
+                    puzzle = candidate;
+                    console.log('Found valid puzzle:', puzzle);
+                }
             }
             attempts++;
         }
 
         if (!puzzle) {
             console.error('Failed to generate valid puzzle');
-            return [16, 17, 18, 19, 20];
+            return [16, 17, 18, 19];  // Return exactly 4 numbers
         }
 
         return puzzle.sort(() => Math.random() - 0.5);
@@ -282,9 +284,15 @@ class MathGame {
                 }
             });
 
-            // Keep the click handler for operations
+            // Add quadrant selection
             quadrant.addEventListener('click', () => {
-                this.processOperation(quadrant);
+                if (this.placedNumbers >= 2) {
+                    this.processOperation(quadrant);
+                    return;
+                }
+
+                // Toggle selection
+                this.selectQuadrant(quadrant);
             });
         });
 
@@ -380,6 +388,28 @@ class MathGame {
         tryAgainButton.addEventListener('click', () => {
             this.solutionScreen.style.display = 'none';
             this.resetGame();
+        });
+
+        // Add number click handler
+        numberPool.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('number')) return;
+            if (!this.selectedQuadrant || this.placedNumbers >= 2) return;
+
+            const number = e.target;
+            const emptySlot = Array.from(this.selectedQuadrant.querySelectorAll('.slot'))
+                .find(slot => !slot.hasChildNodes());
+            
+            if (emptySlot) {
+                emptySlot.appendChild(number);
+                this.placedNumbers++;
+                this.updateDraggableState();
+                this.updateQuadrantState(this.selectedQuadrant);
+
+                // If quadrant is full, clear selection
+                if (this.placedNumbers >= 2) {
+                    this.clearQuadrantSelection();
+                }
+            }
         });
     }
 
@@ -503,7 +533,7 @@ class MathGame {
 
     isWrongLength(solution) {
         if (solution[solution.length - 1].result === 0) {
-            return solution.length !== 3;  // Change to 3 moves
+            return solution.length !== 3;  // Check for exactly 3 moves
         }
         
         // For partial solutions, just check it's not too quick
@@ -549,9 +579,9 @@ class MathGame {
 
     findNextSteps(numbers, steps) {
         if (numbers.includes(0)) {
-            return steps.length === 3 ? steps : null;  // Change to 3 moves
+            return steps.length === 3 ? steps : null;  // Check for exactly 3 moves
         }
-        if (steps.length >= 3) return null;  // Change to 3 moves
+        if (steps.length >= 3) return null;  // Limit to 3 moves
 
         for (let i = 0; i < numbers.length; i++) {
             for (let j = i + 1; j < numbers.length; j++) {
@@ -602,6 +632,35 @@ class MathGame {
             console.log('Solution screen display style:', this.solutionScreen.style.display);
         } else {
             console.log('No solution found for:', this.initialNumbers);
+        }
+    }
+
+    selectQuadrant(quadrant) {
+        // Always clear any existing selection first
+        this.clearQuadrantSelection();
+
+        // If we were already selected, just return (effectively just clearing)
+        if (this.selectedQuadrant === quadrant) {
+            return;
+        }
+
+        // Set new selection
+        this.selectedQuadrant = quadrant;
+        quadrant.classList.add('selected');
+        
+        // Dim other quadrants
+        document.querySelectorAll('.quadrant').forEach(q => {
+            if (q !== quadrant) q.classList.add('dimmed');
+        });
+    }
+
+    clearQuadrantSelection() {
+        if (this.selectedQuadrant) {
+            this.selectedQuadrant.classList.remove('selected');
+            this.selectedQuadrant = null;
+            document.querySelectorAll('.quadrant').forEach(q => {
+                q.classList.remove('dimmed');
+            });
         }
     }
 }

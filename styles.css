@@ -402,4 +402,19 @@ body {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+.quadrant.selected {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+}
+
+.quadrant.dimmed {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Make numbers clickable */
+.number-pool .number {
+    cursor: pointer;
 } 
