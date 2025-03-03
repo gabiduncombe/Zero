@@ -20,7 +20,7 @@ class MathGame {
 
     generatePuzzle() {
         const generateBackwards = () => {
-            let numbers = [0];  // Start with target number
+            let numbers = [1];  // Start with target number 1 instead of 0
             const usedNumbers = new Set();  // Track used numbers to prevent duplicates
             
             // Generate 3 operations in reverse (not 4)
@@ -542,7 +542,7 @@ class MathGame {
 
         // Check if game is won or lost
         if (this.moves === 0) {
-            if (result === 0) {
+            if (result === 1) {  // Check for 1 instead of 0
                 this.victoryScreen.querySelector('h1').textContent = 'Congratulations!';
                 this.victoryScreen.style.display = 'flex';
             } else {
@@ -594,13 +594,13 @@ class MathGame {
     }
 
     isWrongLength(solution) {
-        if (solution[solution.length - 1].result === 0) {
-            return solution.length !== 3;  // Check for exactly 3 moves
+        if (solution[solution.length - 1].result === 1) {  // Check for 1 instead of 0
+            return solution.length !== 3;
         }
         
         // For partial solutions, just check it's not too quick
         const firstTwoResults = solution.slice(0, 2).map(step => step.result);
-        if (firstTwoResults.includes(0)) return true;
+        if (firstTwoResults.includes(1)) return true;
 
         return false;
     }
@@ -640,7 +640,7 @@ class MathGame {
     }
 
     findNextSteps(numbers, steps) {
-        if (numbers.includes(0)) {
+        if (numbers.includes(1)) {
             return steps.length === 3 ? steps : null;  // Check for exactly 3 moves
         }
         if (steps.length >= 3) return null;  // Limit to 3 moves
