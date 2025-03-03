@@ -9,6 +9,8 @@ class MathGame {
         this.minMoves = 3;  // Store minimum moves for current puzzle
         this.solutionScreen = document.querySelector('.solution-screen');  // Make sure this exists
         this.failureScreen = document.querySelector('.failure-screen');
+        this.resetButton = document.querySelector('.reset-button');
+        this.resetButton.disabled = true;  // Start disabled
         this.initializeGame();
         this.setupEventListeners();
     }
@@ -30,16 +32,17 @@ class MathGame {
                     () => {
                         let attempts = 0;
                         while (attempts < 20) {
-                            const a = Math.floor(Math.random() * 10) + 11;  // 11-20
+                            const a = Math.floor(Math.random() * 5) + 16;  // 16-20
+                            const b = Math.floor(Math.random() * 5) + 16;  // 16-20
                             if (usedNumbers.has(a)) {
                                 attempts++;
                                 continue;
                             }
-                            const b = lastNum - a;
-                            if (b >= 1 && b <= 20 && !usedNumbers.has(b)) {
+                            const c = lastNum - a;
+                            if (c >= 1 && c <= 20 && !usedNumbers.has(c)) {
                                 usedNumbers.add(a);
-                                usedNumbers.add(b);
-                                return [a, b];
+                                usedNumbers.add(c);
+                                return [a, c];
                             }
                             attempts++;
                         }
@@ -49,11 +52,7 @@ class MathGame {
                     () => {
                         let attempts = 0;
                         while (attempts < 20) {
-                            const b = Math.floor(Math.random() * 10) + 11;  // Change to 11-20 like addition
-                            if (usedNumbers.has(b)) {
-                                attempts++;
-                                continue;
-                            }
+                            const b = Math.floor(Math.random() * 5) + 16;  // 16-20
                             const a = lastNum + b;
                             if (a >= 1 && a <= 20 && !usedNumbers.has(a)) {
                                 usedNumbers.add(a);
@@ -69,8 +68,8 @@ class MathGame {
                         if (lastNum === 0) {
                             let attempts = 0;
                             while (attempts < 20) {
-                                const a = Math.floor(Math.random() * 19) + 2;  // 2-20
-                                const b = Math.floor(Math.random() * 19) + 2;  // 2-20
+                                const a = Math.floor(Math.random() * 5) + 16;  // 16-20
+                                const b = Math.floor(Math.random() * 5) + 16;  // 16-20
                                 if (!usedNumbers.has(a) && !usedNumbers.has(b)) {
                                     usedNumbers.add(a);
                                     usedNumbers.add(b);
@@ -100,7 +99,7 @@ class MathGame {
                     () => {
                         let attempts = 0;
                         while (attempts < 20) {
-                            const b = Math.floor(Math.random() * 20) + 1;  // 1-20
+                            const b = Math.floor(Math.random() * 5) + 16;  // 16-20
                             const a = lastNum * b;
                             if (a >= 1 && a <= 20 && !usedNumbers.has(a) && !usedNumbers.has(b)) {
                                 usedNumbers.add(a);
@@ -151,6 +150,7 @@ class MathGame {
         this.minMoves = 3;
         this.renderNumbers();
         this.updateMovesDisplay();
+        this.resetButton.disabled = true;  // Reset to disabled on new game
     }
 
     renderNumbers() {
@@ -326,58 +326,45 @@ class MathGame {
         });
 
         // Update victory screen button listeners
-        const playAgainButton = document.querySelector('.play-again');
-        const redoButton = document.querySelector('.redo-button');
-
-        playAgainButton.addEventListener('click', () => {
-            this.victoryScreen.style.display = 'none';
-            this.initializeGame();  // Start new game with new numbers
-        });
-
-        redoButton.addEventListener('click', () => {
-            this.victoryScreen.style.display = 'none';
-            this.resetGame();  // Reset with same initial numbers
+        const playAgainButtons = document.querySelectorAll('.play-again');
+        playAgainButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                this.victoryScreen.style.display = 'none';
+                this.solutionScreen.style.display = 'none';
+                this.initializeGame();
+            });
         });
 
         // Add reset button listener
-        const resetButton = document.querySelector('.button-container .reset-button');
+        const resetButton = document.querySelector('.reset-button');
         resetButton.addEventListener('click', () => {
-            this.resetGame();  // Use the existing resetGame method
+            this.resetGame();
         });
 
         // Add give up button listener
         const giveUpButton = document.querySelector('.give-up-button');
         giveUpButton.addEventListener('click', () => {
-            console.log('Give up clicked'); // Add debug logging
             this.showSolution();
         });
 
-        // Add solution screen play again button listener
-        const solutionPlayAgainButton = this.solutionScreen.querySelector('.play-again');
-        solutionPlayAgainButton.addEventListener('click', () => {
-            this.solutionScreen.style.display = 'none';
+        // Add failure screen buttons
+        const startOverButton = document.querySelector('.start-over');
+        startOverButton.addEventListener('click', () => {
+            this.failureScreen.style.display = 'none';
+            this.resetGame();
+        });
+
+        const newPuzzleButton = document.querySelector('.new-puzzle');
+        newPuzzleButton.addEventListener('click', () => {
+            this.failureScreen.style.display = 'none';
             this.initializeGame();
         });
 
-        // Add failure screen try again button listener
-        const startOverButton = document.querySelector('.start-over');
-        const newPuzzleButton = document.querySelector('.new-puzzle');
-
-        startOverButton.addEventListener('click', () => {
-            this.failureScreen.style.display = 'none';
-            this.resetGame();  // Reset with same numbers
-        });
-
-        newPuzzleButton.addEventListener('click', () => {
-            this.failureScreen.style.display = 'none';
-            this.initializeGame();  // Start new game with new numbers
-        });
-
-        // Add solution screen try again button listener
-        const solutionTryAgainButton = this.solutionScreen.querySelector('.try-again');
-        solutionTryAgainButton.addEventListener('click', () => {
+        // Add solution screen try again button
+        const tryAgainButton = document.querySelector('.try-again');
+        tryAgainButton.addEventListener('click', () => {
             this.solutionScreen.style.display = 'none';
-            this.resetGame();  // Reset with same numbers
+            this.resetGame();
         });
     }
 
@@ -423,39 +410,19 @@ class MathGame {
                 result = num1 + num2;
                 break;
             case 'subtract':
-                result = num1 - num2;  // Allow negative results
+                result = num1 - num2;
                 break;
             case 'multiply':
                 result = num1 * num2;
                 break;
             case 'divide':
-                if (num2 === 0 || num1 % num2 !== 0) return; // Only check for integer division
+                if (num2 === 0 || num1 % num2 !== 0) {  // Keep only the division constraints
+                    quadrant.classList.add('invalid');
+                    // Return numbers to pool
+                    return;
+                }
                 result = num1 / num2;
                 break;
-        }
-
-        // Add check for intermediate results
-        if ((result < 1 || result > 20) && this.moves === 0) {  // Only check range on final move
-            quadrant.classList.add('invalid');
-            // Return numbers to pool
-            const numberPool = document.querySelector('.number-pool');
-            const numbers = [slots[0].firstChild, slots[1].firstChild];
-            
-            numbers.forEach(num => {
-                if (num) {
-                    numberPool.appendChild(num);
-                    this.placedNumbers--;
-                }
-            });
-            
-            this.updateDraggableState();
-            
-            // Remove invalid class after animation
-            setTimeout(() => {
-                quadrant.classList.remove('invalid');
-            }, 400);
-            
-            return;
         }
 
         // Remove the used numbers from their slots
@@ -490,6 +457,9 @@ class MathGame {
 
         // After processing an operation, update quadrant state
         this.updateQuadrantState(quadrant);
+
+        // After a successful operation, enable reset
+        this.resetButton.disabled = false;
     }
 
     resetGame() {
@@ -507,6 +477,7 @@ class MathGame {
         this.renderNumbers();
         this.updateDraggableState();
         this.updateMovesDisplay();
+        this.resetButton.disabled = true;  // Disable after reset
     }
 
     updateQuadrantState(quadrant) {
@@ -523,7 +494,6 @@ class MathGame {
                 const num2 = numbers[j];
                 const remainingNums = numbers.filter((_, idx) => idx !== i && idx !== j);
                 
-                // Try all possible operations (but skip if result is negative)
                 const operations = [
                     { result: num1 + num2, symbol: '+' },
                     { result: num1 - num2 >= 0 ? num1 - num2 : null, symbol: '-' },
@@ -534,10 +504,10 @@ class MathGame {
                 ];
 
                 for (const op of operations) {
-                    if (op.result === null || op.result < 0) continue;  // Skip negative results
+                    if (op.result === null || op.result < 0) continue;
                     
                     const step1 = {
-                        nums: op.symbol === '-' && num2 > num1 ? [num2, num1] : [num1, num2],  // Swap numbers if needed for subtraction
+                        nums: op.symbol === '-' && num2 > num1 ? [num2, num1] : [num1, num2],
                         operation: op.symbol,
                         result: op.result
                     };

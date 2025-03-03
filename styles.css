@@ -395,4 +395,11 @@ body {
 .failure-screen:not([style*="display: none"]) ~ .game-container,
 .solution-screen:not([style*="display: none"]) ~ .game-container {
     filter: blur(8px);
+}
+
+/* Add disabled state for buttons */
+.reset-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
 } 
