@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <header class="game-header">
@@ -20,14 +21,23 @@
             <h1>Congratulations!</h1>
             <div class="victory-emoji">🎉</div>
             <div class="victory-buttons">
-                <button class="play-again">New game</button>
+                <button class="play-again">
+                    <span class="material-icons">casino</span>
+                    New game
+                </button>
             </div>
         </div>
     </div>
 
     <div class="button-container">
-        <button class="give-up-button">Give up</button>
-        <button class="reset-button">Reset</button>
+        <button class="give-up-button">
+            <span class="material-icons">flag</span>
+            Give up
+        </button>
+        <button class="reset-button">
+            <span class="material-icons">refresh</span>
+            Reset
+        </button>
     </div>
 
     <div class="game-container">
@@ -70,8 +80,14 @@
             <h1>Here's a solution:</h1>
             <div class="solution-steps"></div>
             <div class="victory-buttons">
-                <button class="try-again">Try again</button>
-                <button class="play-again">New puzzle</button>
+                <button class="try-again">
+                    <span class="material-icons">replay</span>
+                    Try again
+                </button>
+                <button class="play-again">
+                    <span class="material-icons">casino</span>
+                    New puzzle
+                </button>
             </div>
         </div>
     </div>
@@ -81,8 +97,14 @@
             <h1>Sorry, you didn't complete the puzzle.</h1>
             <div class="failure-emoji">😔</div>
             <div class="failure-buttons">
-                <button class="start-over">Start over</button>
-                <button class="new-puzzle">New puzzle</button>
+                <button class="start-over">
+                    <span class="material-icons">replay</span>
+                    Start over
+                </button>
+                <button class="new-puzzle">
+                    <span class="material-icons">casino</span>
+                    New puzzle
+                </button>
             </div>
         </div>
     </div>
