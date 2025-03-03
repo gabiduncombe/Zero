@@ -213,6 +213,11 @@ class MathGame {
     }
 
     setupEventListeners() {
+        // Prevent default touch behavior
+        document.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        }, { passive: false });
+
         document.addEventListener('dragstart', (e) => {
             if (e.target.classList.contains('number')) {
                 e.target.classList.add('dragging');
