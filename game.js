@@ -147,7 +147,7 @@ class MathGame {
         const puzzleNumbers = this.generatePuzzle();
         this.initialNumbers = puzzleNumbers;
         this.numbers = [...this.initialNumbers];
-        this.moves = 3;  // Start at 3 moves
+        this.moves = 3;  // Keep at 3 moves
         this.minMoves = 3;
         this.renderNumbers();
         this.updateMovesDisplay();
