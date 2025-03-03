@@ -437,8 +437,13 @@ button {
 }
 
 .number.number-selected {
-    box-shadow: 0 0 0 2px #0000001c;
+    box-shadow: 0 0 0 2px #0000001a;
     transform: scale(1.05);
+}
+
+/* Hide selection stroke while dragging */
+.number.number-selected.dragging {
+    box-shadow: none;
 }
 
 /* Prevent hover scale when already selected */

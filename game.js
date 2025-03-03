@@ -199,7 +199,7 @@ class MathGame {
 
     updateMovesDisplay() {
         const dots = document.querySelectorAll('.move-dot');
-        const movesUsed = 4 - this.moves;  // Convert remaining moves to used moves
+        const movesUsed = 3 - this.moves;  // Change from 4 to 3 to start at 0
         
         dots.forEach((dot, index) => {
             if (index < movesUsed) {
