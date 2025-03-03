@@ -680,21 +680,45 @@ class MathGame {
     }
 
     showSolution() {
-        console.log('Show solution called');
         const solution = this.findSolution(this.initialNumbers);
-        console.log('Found solution:', solution);
         if (solution) {
-            const solutionSteps = solution.map((step, index) => 
-                `${step.nums[0]} ${step.operation} ${step.nums[1]} = ${step.result}`
-            ).join('\n');
+            const solutionStepsDiv = this.solutionScreen.querySelector('.solution-steps');
+            solutionStepsDiv.innerHTML = '';
             
-            console.log('Solution screen element:', this.solutionScreen);
-            console.log('Setting solution steps:', solutionSteps);
-            this.solutionScreen.querySelector('.solution-steps').textContent = solutionSteps;
+            solution.forEach(step => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'solution-step';
+                
+                // First number
+                const num1 = document.createElement('div');
+                num1.className = 'solution-number';
+                num1.textContent = step.nums[0];
+                
+                // Operator
+                const op = document.createElement('div');
+                op.className = 'solution-operator';
+                op.textContent = step.operation;
+                
+                // Second number
+                const num2 = document.createElement('div');
+                num2.className = 'solution-number';
+                num2.textContent = step.nums[1];
+                
+                // Equals
+                const equals = document.createElement('div');
+                equals.className = 'solution-equals';
+                equals.textContent = '=';
+                
+                // Result
+                const result = document.createElement('div');
+                result.className = 'solution-number';
+                result.textContent = step.result;
+                
+                stepDiv.append(num1, op, num2, equals, result);
+                solutionStepsDiv.appendChild(stepDiv);
+            });
+            
             this.solutionScreen.style.display = 'flex';
-            console.log('Solution screen display style:', this.solutionScreen.style.display);
-        } else {
-            console.log('No solution found for:', this.initialNumbers);
         }
     }
 
