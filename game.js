@@ -184,17 +184,31 @@ class MathGame {
     }
 
     setupEventListeners() {
-        // Setup drag and drop
         document.addEventListener('dragstart', (e) => {
             if (e.target.classList.contains('number')) {
                 e.target.classList.add('dragging');
+                
+                // Original number in pool gets reduced opacity
+                e.target.style.opacity = '0.3';
+                
+                // Set the drag image to be a clone at full opacity
+                const dragImage = e.target.cloneNode(true);
+                dragImage.style.opacity = '1';
+                document.body.appendChild(dragImage);
+                e.dataTransfer.setDragImage(dragImage, 20, 20);
+                
+                // Remove the clone after the drag image is set
+                setTimeout(() => dragImage.remove(), 0);
             }
         });
 
         document.addEventListener('dragend', (e) => {
             if (e.target.classList.contains('number')) {
                 e.target.classList.remove('dragging');
+                
+                // If the number wasn't dropped in a slot, restore its opacity
                 if (e.target.closest('.number-pool')) {
+                    e.target.style.opacity = '1';
                     this.updateDraggableState();
                 }
             }
