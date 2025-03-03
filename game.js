@@ -542,10 +542,11 @@ class MathGame {
 
         // Check if game is won or lost
         if (this.moves === 0) {
-            if (result === 1) {  // Check for 1 instead of 0
+            if (result === 1) {
                 this.victoryScreen.querySelector('h1').textContent = 'Congratulations!';
                 this.victoryScreen.style.display = 'flex';
             } else {
+                this.failureScreen.querySelector('h1').textContent = 'Sorry, you didn\'t complete the puzzle.';
                 this.failureScreen.style.display = 'flex';
             }
         }
@@ -734,6 +735,9 @@ class MathGame {
                 stepDiv.append(num1, op, num2, equals, result);
                 solutionStepsDiv.appendChild(stepDiv);
             });
+            
+            const solutionContent = this.solutionScreen.querySelector('.solution-content h1');
+            solutionContent.textContent = 'Here\'s a solution:';
             
             this.solutionScreen.style.display = 'flex';
         }
