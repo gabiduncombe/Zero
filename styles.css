@@ -96,16 +96,15 @@ body {
     height: 60px;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.2);
-    transition: all 0.05s ease-out;  /* Add smooth transition */
+    transition: background-color 0.05s ease-out;  /* Only transition background-color */
 }
 
 .slot.drag-over {
-    background-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.4);  /* Remove box-shadow */
 }
 
 .slot:empty:hover {
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.4);  /* Match drag-over state */
 }
 
 .operation-symbol {
@@ -296,7 +295,7 @@ body {
     margin: 20px 0;
     line-height: 1.4;
     white-space: pre-line;
-    color: black;
+    color: black; 
 }
 
 .game-header {
