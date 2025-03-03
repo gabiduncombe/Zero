@@ -770,6 +770,10 @@ class MathGame {
                 newPuzzleButton.disabled = false;
             }
 
+            // Update return button text
+            const returnButton = this.solutionScreen.querySelector('.try-again');
+            returnButton.innerHTML = '<span>←</span>Return to puzzle';
+
             this.solutionScreen.style.display = 'flex';
         }
     }
