@@ -4,9 +4,9 @@ class MathGame {
         this.placedNumbers = 0;  // Add counter for placed numbers
         this.victoryScreen = document.querySelector('.victory-screen');
         this.initialNumbers = []; // Store initial numbers
-        this.moves = 0;
+        this.moves = 4;  // Start with 4 moves
         this.movesDisplay = document.querySelector('.moves-counter span');
-        this.minMoves = 3;  // Store minimum moves for current puzzle
+        this.minMoves = 4;  // Require exactly 4 moves
         this.solutionScreen = document.querySelector('.solution-screen');  // Make sure this exists
         this.failureScreen = document.querySelector('.failure-screen');
         this.resetButton = document.querySelector('.reset-button');
@@ -21,8 +21,8 @@ class MathGame {
             let numbers = [0];  // Start with target number
             const usedNumbers = new Set();  // Track used numbers to prevent duplicates
             
-            // Generate 3 operations in reverse
-            for (let i = 0; i < 3; i++) {
+            // Generate 4 operations in reverse
+            for (let i = 0; i < 4; i++) {
                 const lastNum = numbers[numbers.length - 1];
                 numbers.pop();  // Remove the last number since we're working backwards
                 
@@ -34,6 +34,7 @@ class MathGame {
                         while (attempts < 20) {
                             const a = Math.floor(Math.random() * 5) + 16;  // 16-20
                             const b = Math.floor(Math.random() * 5) + 16;  // 16-20
+                            if (a % b === 0 || b % a === 0) continue;  // Skip if they divide evenly
                             if (usedNumbers.has(a)) {
                                 attempts++;
                                 continue;
@@ -127,27 +128,25 @@ class MathGame {
                 numbers.push(...validNumbers);
             }
             
-            return Array.from(usedNumbers);  // Return only the unique numbers
+            return Array.from(usedNumbers);  // Should return 5 numbers
         };
 
-        // Keep trying until we get a valid puzzle with a solution
         let puzzle = null;
         while (!puzzle) {
             const candidate = generateBackwards();
-            if (candidate && candidate.length === 4 && this.findSolution(candidate)) {  // Ensure exactly 4 numbers
+            if (candidate && candidate.length === 5 && this.findSolution(candidate)) {  // Check for 5 numbers
                 puzzle = candidate;
             }
         }
-
-        return puzzle.sort(() => Math.random() - 0.5);
+        return puzzle;
     }
 
     initializeGame() {
         const puzzleNumbers = this.generatePuzzle();
         this.initialNumbers = puzzleNumbers;
         this.numbers = [...this.initialNumbers];
-        this.moves = 3;  // Keep at 3 moves
-        this.minMoves = 3;
+        this.moves = 4;  // Keep at 4 moves
+        this.minMoves = 4;
         this.renderNumbers();
         this.updateMovesDisplay();
         this.resetButton.disabled = true;  // Reset to disabled on new game
@@ -179,7 +178,7 @@ class MathGame {
 
     updateMovesDisplay() {
         const dots = document.querySelectorAll('.move-dot');
-        const movesUsed = 3 - this.moves;  // Convert remaining moves to used moves
+        const movesUsed = 4 - this.moves;  // Convert remaining moves to used moves
         
         dots.forEach((dot, index) => {
             if (index < movesUsed) {
@@ -473,7 +472,7 @@ class MathGame {
         // Reset to initial numbers
         this.numbers = [...this.initialNumbers];
         this.placedNumbers = 0;
-        this.moves = 3;  // Reset to 3 moves
+        this.moves = 4;  // Reset to 4 moves
         this.renderNumbers();
         this.updateDraggableState();
         this.updateMovesDisplay();
@@ -488,6 +487,18 @@ class MathGame {
 
     // Add new method to find solution
     findSolution(numbers) {
+        // Helper to check if a solution is too quick
+        const isTooQuick = (solution) => {
+            // Check if we can reach 0 in less than 3 operations
+            if (solution.length < 3) return true;
+
+            // Check first two operations
+            const firstTwoResults = solution.slice(0, 2).map(step => step.result);
+            if (firstTwoResults.includes(0)) return true;
+
+            return false;
+        };
+
         for (let i = 0; i < numbers.length; i++) {
             for (let j = i + 1; j < numbers.length; j++) {
                 const num1 = numbers[i];
@@ -514,7 +525,7 @@ class MathGame {
 
                     const numsAfterStep1 = [...remainingNums, op.result];
                     const solution = this.findNextSteps(numsAfterStep1, [step1]);
-                    if (solution) return solution;
+                    if (solution && !isTooQuick(solution)) return solution;
                 }
             }
         }
@@ -551,7 +562,7 @@ class MathGame {
                     };
 
                     const solution = this.findNextSteps([...remainingNums, op.result], [...steps, newStep]);
-                    if (solution) return solution;
+                    if (solution && !isTooQuick(solution)) return solution;
                 }
             }
         }
