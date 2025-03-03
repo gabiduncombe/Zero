@@ -12,6 +12,7 @@ class MathGame {
         this.resetButton = document.querySelector('.reset-button');
         this.resetButton.disabled = true;  // Start disabled
         this.selectedQuadrant = null;
+        this.readyQuadrant = null;  // Add this to track ready quadrant
         this.initializeGame();
         this.setupEventListeners();
     }
@@ -404,10 +405,14 @@ class MathGame {
                 this.placedNumbers++;
                 this.updateDraggableState();
                 this.updateQuadrantState(this.selectedQuadrant);
+            }
+        });
 
-                // If quadrant is full, clear selection
-                if (this.placedNumbers >= 2) {
-                    this.clearQuadrantSelection();
+        // Add keyboard listener for Return key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === 'Return') {
+                if (this.readyQuadrant) {
+                    this.processOperation(this.readyQuadrant);
                 }
             }
         });
@@ -503,7 +508,8 @@ class MathGame {
         // After processing an operation, update quadrant state
         this.updateQuadrantState(quadrant);
 
-        // After a successful operation, enable reset
+        // After processing the operation, clear selection and update state
+        this.clearQuadrantSelection();
         this.resetButton.disabled = false;
     }
 
@@ -529,6 +535,13 @@ class MathGame {
         const slots = quadrant.querySelectorAll('.slot');
         const isFull = Array.from(slots).every(slot => slot.hasChildNodes());
         quadrant.classList.toggle('ready', isFull);
+        
+        // Update readyQuadrant reference
+        if (isFull) {
+            this.readyQuadrant = quadrant;
+        } else if (this.readyQuadrant === quadrant) {
+            this.readyQuadrant = null;
+        }
     }
 
     isWrongLength(solution) {
