@@ -13,6 +13,7 @@ class MathGame {
         this.resetButton.disabled = true;  // Start disabled
         this.selectedQuadrant = null;
         this.readyQuadrant = null;  // Add this to track ready quadrant
+        this.selectedNumbers = [];  // Track selected numbers
         this.initializeGame();
         this.setupEventListeners();
     }
@@ -161,6 +162,7 @@ class MathGame {
     }
 
     initializeGame() {
+        this.selectedNumbers = [];
         const puzzleNumbers = this.generatePuzzle();
         this.initialNumbers = puzzleNumbers;
         this.numbers = [...this.initialNumbers];
@@ -278,7 +280,8 @@ class MathGame {
                     if (draggingNumber.closest('.number-pool')) {
                         this.placedNumbers++;
                     }
-                    draggingNumber.style.opacity = '1';  // Reset opacity when dropped in slot
+                    draggingNumber.style.opacity = '1';
+                    draggingNumber.classList.add('number-selected');
                     emptySlot.appendChild(draggingNumber);
                     this.updateDraggableState();
                     this.updateQuadrantState(quadrant);
@@ -297,8 +300,10 @@ class MathGame {
             });
         });
 
-        // Setup number pool for receiving numbers back
+        // Get number pool reference once
         const numberPool = document.querySelector('.number-pool');
+
+        // Setup number pool for receiving numbers back
         numberPool.addEventListener('dragover', (e) => {
             e.preventDefault();
         });
@@ -346,6 +351,8 @@ class MathGame {
                 if (quadrant) {
                     this.updateQuadrantState(quadrant);
                 }
+
+                draggingNumber.classList.remove('number-selected');
             }
         });
 
@@ -391,21 +398,60 @@ class MathGame {
             this.resetGame();
         });
 
-        // Add number click handler
+        // Add number selection handler
         numberPool.addEventListener('click', (e) => {
-            if (!e.target.classList.contains('number')) return;
-            if (!this.selectedQuadrant || this.placedNumbers >= 2) return;
+            const number = e.target.closest('.number');
+            if (!number) return;
 
-            const number = e.target;
-            const emptySlot = Array.from(this.selectedQuadrant.querySelectorAll('.slot'))
-                .find(slot => !slot.hasChildNodes());
-            
-            if (emptySlot) {
-                emptySlot.appendChild(number);
-                this.placedNumbers++;
-                this.updateDraggableState();
-                this.updateQuadrantState(this.selectedQuadrant);
+            // If quadrant is selected, use existing click-to-place behavior
+            if (this.selectedQuadrant) {
+                const emptySlot = Array.from(this.selectedQuadrant.querySelectorAll('.slot'))
+                    .find(slot => !slot.hasChildNodes());
+                
+                if (emptySlot) {
+                    number.classList.add('number-selected');
+                    emptySlot.appendChild(number);
+                    this.placedNumbers++;
+                    this.updateDraggableState();
+                    this.updateQuadrantState(this.selectedQuadrant);
+                }
+                return;
             }
+
+            // Handle number selection
+            if (this.selectedNumbers.includes(number)) {
+                // Deselect if already selected
+                number.classList.remove('number-selected');
+                this.selectedNumbers = this.selectedNumbers.filter(n => n !== number);
+            } else if (this.selectedNumbers.length < 2) {
+                // Select if we have room
+                number.classList.add('number-selected');
+                this.selectedNumbers.push(number);
+            }
+        });
+
+        // Add operation click handler for selected numbers
+        document.querySelectorAll('.quadrant').forEach(quadrant => {
+            quadrant.addEventListener('click', () => {
+                // If we have 2 selected numbers, place them in this quadrant
+                if (this.selectedNumbers.length === 2) {
+                    const slots = quadrant.querySelectorAll('.slot');
+                    slots[0].appendChild(this.selectedNumbers[0]);
+                    slots[1].appendChild(this.selectedNumbers[1]);
+                    
+                    this.selectedNumbers.forEach(num => {
+                        num.classList.remove('number-selected');
+                    });
+                    this.selectedNumbers = [];
+                    
+                    this.placedNumbers = 2;
+                    this.updateDraggableState();
+                    this.updateQuadrantState(quadrant);
+                    return;
+                }
+
+                // ... existing quadrant click logic ...
+            });
         });
 
         // Add keyboard listener for Return key
@@ -514,6 +560,10 @@ class MathGame {
     }
 
     resetGame() {
+        this.selectedNumbers.forEach(num => {
+            num.classList.remove('number-selected');
+        });
+        this.selectedNumbers = [];
         // Clear all slots
         document.querySelectorAll('.slot').forEach(slot => {
             if (slot.firstChild) {

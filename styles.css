@@ -434,4 +434,14 @@ body {
 .failure-content h1,
 button {
     font-family: 'Lato', sans-serif;
+}
+
+.number.number-selected {
+    box-shadow: 0 0 0 2px #00000022;
+    transform: scale(1.05);
+}
+
+/* Prevent hover scale when already selected */
+.number.number-selected:hover {
+    transform: scale(1.05);
 } 
