@@ -436,14 +436,11 @@ class MathGame {
                 // If we have 2 selected numbers, place them in this quadrant
                 if (this.selectedNumbers.length === 2) {
                     const slots = quadrant.querySelectorAll('.slot');
-                    slots[0].appendChild(this.selectedNumbers[0]);
-                    slots[1].appendChild(this.selectedNumbers[1]);
-                    
-                    this.selectedNumbers.forEach(num => {
-                        num.classList.remove('number-selected');
+                    this.selectedNumbers.forEach((num, i) => {
+                        num.classList.add('number-selected');
+                        slots[i].appendChild(num);
                     });
                     this.selectedNumbers = [];
-                    
                     this.placedNumbers = 2;
                     this.updateDraggableState();
                     this.updateQuadrantState(quadrant);

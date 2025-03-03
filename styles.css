@@ -437,7 +437,7 @@ button {
 }
 
 .number.number-selected {
-    box-shadow: 0 0 0 2px #00000022;
+    box-shadow: 0 0 0 2px #0000001c;
     transform: scale(1.05);
 }
 
