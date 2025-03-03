@@ -348,7 +348,7 @@ body {
 
 .game-header p {
     font-family: 'Lato', sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 400;
     margin: 0;
     line-height: 1;  /* Tighten line height */
@@ -494,8 +494,8 @@ button {
 .solution-step[data-operation="divide"] .solution-step-content { background-color: #FEB326; }
 
 .solution-number {
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     background-color: white;
     border-radius: 50%;
     display: flex;
@@ -503,8 +503,8 @@ button {
     align-items: center;
     font-family: 'Lato', sans-serif;
     font-weight: 600;
-    font-size: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);  /* Same as main game numbers */
+    font-size: 18px;  /* Match main game font size */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .solution-operator {
@@ -526,8 +526,8 @@ button {
 }
 
 .solution-starting-number {
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     background-color: white;
     border-radius: 50%;
     display: flex;
@@ -535,8 +535,8 @@ button {
     align-items: center;
     font-family: 'Lato', sans-serif;
     font-weight: 600;
-    font-size: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);  /* Same as main game numbers */
+    font-size: 18px;  /* Match main game font size */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .victory-emoji,
@@ -574,7 +574,7 @@ button {
     font-size: 14px;
     font-weight: 600;
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease;  /* This controls how the helper text fades */
     pointer-events: none;
     text-align: center;
     background: rgba(255, 255, 255, 0.9);
@@ -585,4 +585,8 @@ button {
 
 .solution-step.blurred:hover .reveal-text {
     opacity: 1;
+}
+
+.solution-step-content {
+    transition: filter 0.5s ease-out;  /* This controls how smoothly the blur fades */
 } 
