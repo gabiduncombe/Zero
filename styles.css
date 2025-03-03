@@ -397,6 +397,7 @@ body {
         gap: 8px;
         width: calc(100% - 32px);  /* Add some padding from edges */
         justify-content: center;
+        margin-bottom: 0;  /* Remove bottom margin if any */
     }
 
     .quadrant {
@@ -489,6 +490,13 @@ body {
     .solution-starting-numbers {
         gap: 8px;
         margin-bottom: 16px;
+    }
+
+    /* Adjust moves counter position */
+    .moves-counter {
+        margin-top: 16px;  /* Add space above dots */
+        margin-bottom: 32px;  /* Add space below dots */
+        position: relative;  /* Remove from bottom fixed positioning if any */
     }
 }
 
