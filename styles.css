@@ -561,7 +561,7 @@ button {
 }
 
 .solution-step.blurred .solution-step-content {
-    filter: blur(12px);  /* Reduced blur to still show shapes */
+    filter: blur(8px);  /* Reduced blur to still show shapes */
 }
 
 /* Update reveal text to be above the blur */
