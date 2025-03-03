@@ -246,20 +246,15 @@ class MathGame {
                     slot.classList.remove('drag-over')
                 );
 
-                // If dropped directly on a slot, use that slot
-                const targetSlot = e.target.closest('.slot');
-                if (targetSlot && !targetSlot.hasChildNodes()) {
-                    targetSlot.appendChild(draggingNumber);
-                    this.updateDraggableState();
-                    this.updateQuadrantState(quadrant);
-                    return;
-                }
-
-                // Otherwise, find first empty slot
+                // Find first empty slot
                 const emptySlot = Array.from(quadrant.querySelectorAll('.slot'))
                     .find(slot => !slot.hasChildNodes());
                 
                 if (emptySlot) {
+                    if (draggingNumber.closest('.number-pool')) {
+                        this.placedNumbers++;
+                    }
+                    draggingNumber.style.opacity = '1';  // Reset opacity when dropped in slot
                     emptySlot.appendChild(draggingNumber);
                     this.updateDraggableState();
                     this.updateQuadrantState(quadrant);

@@ -47,7 +47,7 @@ body {
     font-size: 18px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     user-select: none;
-    transition: transform 0.2s ease-out;
+    transition: transform 0.1s ease-out;
     position: relative;
     z-index: 10;
 }
