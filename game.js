@@ -14,6 +14,7 @@ class MathGame {
         this.selectedQuadrant = null;
         this.readyQuadrant = null;  // Add this to track ready quadrant
         this.selectedNumbers = [];  // Track selected numbers
+        this.revealedHints = new Set();  // Track which hints are revealed
         this.initializeGame();
         this.setupEventListeners();
     }
@@ -171,6 +172,7 @@ class MathGame {
         this.renderNumbers();
         this.updateMovesDisplay();
         this.resetButton.disabled = true;  // Reset to disabled on new game
+        this.revealedHints = new Set();  // Reset revealed hints for new game
     }
 
     renderNumbers() {
@@ -702,15 +704,13 @@ class MathGame {
                 const stepDiv = document.createElement('div');
                 stepDiv.className = 'solution-step';
 
-                // Create content wrapper
                 const contentDiv = document.createElement('div');
                 contentDiv.className = 'solution-step-content';
 
-                // Add blur to second and third steps
-                if (index > 0) {
+                // Add blur to all steps if not revealed
+                if (!this.revealedHints.has(index)) {
                     stepDiv.classList.add('blurred');
                     
-                    // Add reveal text (outside content wrapper)
                     const revealText = document.createElement('div');
                     revealText.className = 'reveal-text';
                     revealText.textContent = 'Click to reveal next step';
@@ -718,6 +718,7 @@ class MathGame {
                     
                     stepDiv.addEventListener('click', () => {
                         stepDiv.classList.remove('blurred');
+                        this.revealedHints.add(index);  // Track that this hint was revealed
                     });
                 }
 

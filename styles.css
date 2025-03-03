@@ -579,8 +579,8 @@ button {
     text-align: center;
     background: rgba(255, 255, 255, 0.9);
     padding: 8px 16px;
-    border-radius: 4px;
-    z-index: 1;  /* Ensure it's above the blurred content */
+    border-radius: 8px;  /* This controls the corner radius */
+    z-index: 1;
 }
 
 .solution-step.blurred:hover .reveal-text {
