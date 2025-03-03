@@ -617,15 +617,16 @@ class MathGame {
                     { result: num1 - num2 >= 0 ? num1 - num2 : null, symbol: '-' },
                     { result: num2 - num1 >= 0 ? num2 - num1 : null, symbol: '-' },
                     { result: num1 * num2, symbol: '×' },
-                    { result: num1 % num2 === 0 ? num1 / num2 : null, symbol: '÷' },
-                    { result: num2 % num1 === 0 ? num2 / num1 : null, symbol: '÷' }
+                    { result: num1 % num2 === 0 ? num1 / num2 : null, symbol: '÷', nums: [num1, num2] },
+                    { result: num2 % num1 === 0 ? num2 / num1 : null, symbol: '÷', nums: [num2, num1] }
                 ];
 
                 for (const op of operations) {
                     if (op.result === null || op.result < 0) continue;
                     
                     const step1 = {
-                        nums: op.symbol === '-' && num2 > num1 ? [num2, num1] : [num1, num2],
+                        nums: op.symbol === '÷' ? op.nums : 
+                              op.symbol === '-' && num2 > num1 ? [num2, num1] : [num1, num2],
                         operation: op.symbol,
                         result: op.result
                     };
@@ -657,8 +658,8 @@ class MathGame {
                     { result: num1 - num2 >= 0 ? num1 - num2 : null, symbol: '-' },
                     { result: num2 - num1 >= 0 ? num2 - num1 : null, symbol: '-' },
                     { result: num1 * num2, symbol: '×' },
-                    { result: num1 % num2 === 0 ? num1 / num2 : null, symbol: '÷' },
-                    { result: num2 % num1 === 0 ? num2 / num1 : null, symbol: '÷' }
+                    { result: num1 % num2 === 0 ? num1 / num2 : null, symbol: '÷', nums: [num1, num2] },
+                    { result: num2 % num1 === 0 ? num2 / num1 : null, symbol: '÷', nums: [num2, num1] }
                 ];
 
                 for (const op of operations) {
